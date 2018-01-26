@@ -9,7 +9,11 @@ import javax.swing.JFrame;
  */
 public class SimulationGUI extends JFrame implements Runnable {
 	private static final int TRAIN_SPEED_VARIATION = 3;
-	private static final int TRAIN_BASIC_SPEED = Rand(5,7);
+	private static final int TRAIN_BASIC_SPEED = 2;
+	
+	private static final int TRAIN_BASIC_SPEED_MIN = 3;
+	private static final int TRAIN_BASIC_SPEED_MAX = 8;
+	
 	private SimulationDashboard dashboard = new SimulationDashboard();
 	private int currentTime = 0;
 	private static final int SIMULATION_DURATION = 1000;
@@ -32,17 +36,17 @@ public class SimulationGUI extends JFrame implements Runnable {
 	public void run() {
 		int trainBasicSpeed = TRAIN_BASIC_SPEED;
 		while (currentTime <= SIMULATION_DURATION) {
-			//System.out.println("Current time : " + currentTime);
-			if (currentTime % 12 == 0) {
+			System.out.println("Current time : " + currentTime);
+			if (currentTime % 100 == 0) {
 				Line line = dashboard.getLine();
 				Canton firstCanton = line.getCantons().get(0);
 				if (firstCanton.isFree()) {
+					trainBasicSpeed = Rand(TRAIN_BASIC_SPEED_MIN,TRAIN_BASIC_SPEED_MAX);
 					Train newTrain = new Train(line, firstCanton, trainBasicSpeed);
 					dashboard.addTrain(newTrain);
 					newTrain.start();
 					System.out.println("New Train created " + newTrain.toString());
 					//trainBasicSpeed += TRAIN_SPEED_VARIATION;
-					trainBasicSpeed = Rand(5,7);
 					System.out.println(trainBasicSpeed);
 				}
 

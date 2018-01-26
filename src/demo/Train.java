@@ -51,8 +51,14 @@ public class Train extends Thread {
 				try {
 					Canton nextCanton = line.getCantonByPosition(position + speed);
 					nextCanton.enter(this);
+					nextCanton.setPassenger(nextCanton.getPassenger() + SimulationGUI.Rand(2,10));
 					
-					nextCanton.setPassenger(SimulationGUI.Rand(-10,10));
+					if(currentCanton.getPassenger()<0) {
+						currentCanton.setPassenger(0);
+						
+					}
+					
+					
 					System.out.println("PASSAGERS DANS LE CANTON n°" + nextCanton.getId() +" : " + nextCanton.getPassenger());
 				} catch (TerminusException e) {
 					hasArrived = true;
@@ -62,6 +68,7 @@ public class Train extends Thread {
 				updatePosition();
 			}
 		}
+		//currentCanton.setPassenger(currentCanton.getPassenger() + SimulationGUI.Rand(2,10));
 		currentCanton.exit();
 	}
 
