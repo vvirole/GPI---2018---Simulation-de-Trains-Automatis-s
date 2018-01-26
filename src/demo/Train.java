@@ -50,13 +50,12 @@ public class Train extends Thread {
 			if (position + speed >= currentCanton.getEndPoint()) {
 				try {
 					Canton nextCanton = line.getCantonByPosition(position + speed);
-					Canton previousCanton = line.getCantonByPosition(position-50 + speed);
+					Canton previousCanton = line.getCantonByPosition(position-100+ speed);
 					nextCanton.enter(this);
-					previousCanton.setPassenger(previousCanton.getPassenger() + SimulationGUI.Rand(-10,10));
 					
+					previousCanton.setPassenger(nextCanton.getPassenger() + SimulationGUI.Rand(-10,10));
 					if(currentCanton.getPassenger()<0) {
 						currentCanton.setPassenger(0);
-						
 					}
 					
 					
@@ -70,9 +69,6 @@ public class Train extends Thread {
 			}
 		}
 		currentCanton.exit();
-		if (currentCanton.getId()==8){
-			currentCanton.setPassenger(currentCanton.getPassenger() + SimulationGUI.Rand(-10,10));
-		}
 	}
 
 	@Override

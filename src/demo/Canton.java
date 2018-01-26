@@ -14,7 +14,7 @@ public class Canton {
 		this.id = id;
 		this.length = length;
 		this.startPoint = startPoint;
-		this.passenger = 50;
+		this.passenger = 100;
 	}
 
 	public int getLength() {

@@ -12,7 +12,7 @@ public class SimulationGUI extends JFrame implements Runnable {
 	private static final int TRAIN_BASIC_SPEED = 2;
 	
 	private static final int TRAIN_BASIC_SPEED_MIN = 3;
-	private static final int TRAIN_BASIC_SPEED_MAX = 8;
+	private static final int TRAIN_BASIC_SPEED_MAX = 9;
 	
 	private SimulationDashboard dashboard = new SimulationDashboard();
 	private int currentTime = 0;
@@ -32,12 +32,11 @@ public class SimulationGUI extends JFrame implements Runnable {
 		simulationThread.start();
 	}
 
-	@Override
 	public void run() {
 		int trainBasicSpeed = TRAIN_BASIC_SPEED;
 		while (currentTime <= SIMULATION_DURATION) {
 			System.out.println("Current time : " + currentTime);
-			if (currentTime % 100 == 0) {
+			if (currentTime % 15 == 0) {
 				Line line = dashboard.getLine();
 				Canton firstCanton = line.getCantons().get(0);
 				if (firstCanton.isFree()) {

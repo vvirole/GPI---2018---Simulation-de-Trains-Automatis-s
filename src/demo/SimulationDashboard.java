@@ -53,10 +53,10 @@ public class SimulationDashboard extends JPanel {
 			
 			int startPoint = canton.getStartPoint();
 			g2.setFont(new Font("Dialog", Font.PLAIN, 25));
-			g2.drawString("Canton " + canton.getId(), startPoint + 100, START_Y + 30);
-
-			g2.drawString("P : " + canton.getPassenger(), startPoint + 100, START_Y + 60);
-		
+			g2.drawString("Canton " + canton.getId(), startPoint + 40, START_Y + 30);
+			if (canton.getId()<=7){
+				g2.drawString("G"+canton.getId()+" : " + canton.getPassenger(), startPoint +100 , START_Y + 60);
+			}
 			g2.drawLine(START_X + startPoint, START_Y - 10, START_X + startPoint, START_Y + 10);
 			int endPoint = canton.getEndPoint();
 			g2.drawLine(START_X + endPoint, START_Y - 10, START_X + endPoint, START_Y + 10);
