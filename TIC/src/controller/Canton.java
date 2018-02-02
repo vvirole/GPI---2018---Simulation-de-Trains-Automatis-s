@@ -5,6 +5,8 @@ public class Canton {
 	//Canton identity
 	private int id;
 	
+	//variable in waiting
+	
 	//Length of the canton on the frame
 	private int length;
 	
