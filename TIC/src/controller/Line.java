@@ -3,7 +3,6 @@ package controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import demo.Canton;
 
 public class Line {
 	
@@ -22,26 +21,20 @@ public class Line {
 	//Canton List on the line
 	private List<Canton> cantons = new ArrayList<Canton>();
 
-	private Line(int length, int numCanton) {
+	public Line(int length, int numCanton) {
 		this.length = length;
 		this.numCanton = numCanton;
 	}
 	
 	/**
-	 * Create a new instance of Line
-	 * @param length : Size of the line on the frame.
-	 * @param numCanton : Number of Canton on the line
-	 * @return new instance of Line
+	 * Set a new instance of the Line
+	 * @param instance of Line
 	 */
-	public static Line newInstance(int length, int numCanton) {
-		if(instance == null) {
-			instance = new Line(length, numCanton);
-		}
-		return instance;
+	public static void setInstance(Line instance) {
+		Line.instance = instance;
 	}
 	
 	/**
-	 * 
 	 * @return the current instance of Line
 	 */
 	public static Line getInstance() {
