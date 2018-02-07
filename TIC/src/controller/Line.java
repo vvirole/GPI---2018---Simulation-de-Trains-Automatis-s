@@ -30,7 +30,7 @@ public class Line {
 	 * Set a new instance of the Line
 	 * @param instance of Line
 	 */
-	public static void setInstance(Line instance) {
+	public void setInstance(Line instance) {
 		Line.instance = instance;
 	}
 	
