@@ -3,8 +3,10 @@ package core.entity;
 import java.util.HashMap;
 import java.util.Map;
 
+import core.Constants;
 import core.TerminusException;
 import gui.GUIConstants;
+import sun.rmi.runtime.Log;
 
 public class Train extends Thread {
 
@@ -46,6 +48,13 @@ public class Train extends Thread {
 		this.speed = speed;
 		this.type = type;
 		currentCanton.enter(this);
+		
+		// Initialisation of the capacity of train according to his size
+		switch(type){
+			case SHORT_TYPE : maxPassengers = Constants.SHORT_TRAIN_CAPACITY; break;
+			case LONG_TYPE : maxPassengers = Constants.LONG_TRAIN_CAPACITY; break;
+			default : break;
+		}
 	}
 	
 	@Override
