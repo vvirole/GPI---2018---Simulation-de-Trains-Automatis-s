@@ -17,9 +17,6 @@ public class Line {
 	//Size of the line on the frame.
 	private int length;
 	
-	//
-	private int startPoint;
-	
 	//Number of Canton on the line
 	private int numCanton;
 	
@@ -71,10 +68,6 @@ public class Line {
 
 	public void setLength(int length) {
 		this.length = length;
-	}
-	
-	public int getStartPoint(){
-		return startPoint;
 	}
 
 	public int getNumCanton() {
