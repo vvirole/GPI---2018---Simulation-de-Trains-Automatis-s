@@ -28,7 +28,6 @@ public class Line {
 		this.name = name;
 		this.length = length;
 		this.numCanton = numCanton;
-		this.startPoint = GUIConstants.WINDOW_WIDTH - length/2;
 	}
 	
 	/**
