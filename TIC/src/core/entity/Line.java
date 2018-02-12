@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import core.TerminusException;
-import gui.GUIConstants;
 
 
 public class Line {
@@ -22,6 +21,9 @@ public class Line {
 	
 	//Canton List on the line
 	private List<Canton> cantons = new ArrayList<Canton>();
+	
+	//List of trains on the line
+	private List<Train> trains = new ArrayList<Train>();
 
 
 	public Line(String name, int length, int numCanton) {
@@ -38,6 +40,12 @@ public class Line {
 		cantons.add(canton);
 	}
 	
+	/**
+	 * Get a canton by the position of a train on the line
+	 * @param position of the train
+	 * @return the canton where the train is
+	 * @throws TerminusException
+	 */
 	public Canton getCantonByPosition(int position) throws TerminusException {
 		for (Canton canton : cantons) {
 			if (canton.getEndPoint() > position) {
@@ -45,6 +53,14 @@ public class Line {
 			}
 		}
 		throw new TerminusException();
+	}
+	
+	public void addTrain(Train train){
+		trains.add(train);
+	}
+	
+	public List<Train> getTrains(){
+		return trains;
 	}
 	
 	//GETTER AND SETTER
