@@ -34,7 +34,7 @@ public class SimulationDashboard extends JPanel implements Runnable {
 				Canton startCanton = line.getCantons().get(0);
 				if (startCanton.isFree()){
 					Train newTrain = new Train(startCanton, 50, null, Constants.TRAIN_BASIC_SPEED, Train.SHORT_TYPE);
-					trains.add(newTrain);
+					line.addTrain(newTrain);
 					newTrain.start();
 				}
 			}
@@ -58,8 +58,9 @@ public class SimulationDashboard extends JPanel implements Runnable {
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setFont(new Font("Dialog", Font.PLAIN, 15));
 		g2.setStroke(new BasicStroke(5));
-		LinePrinter.printLine(Line.getInstance(), g2);
-		LinePrinter.printTrains(trains, g2);
+		Line line = Line.getInstance();
+		LinePrinter.printLine(line, g2);
+		LinePrinter.printTrains(line.getTrains(), g2);
 	}
 	
 	public int getTime(){
