@@ -61,8 +61,13 @@ public class LinePrinter {
 	 * @param g2
 	 */
 	public static void printTrains(List<Train> trains, Graphics2D g2){
-		g2.setColor(GUIConstants.TRAIN_COLOR); 
 		for (Train train : trains){
+			if(train.getType() == Train.SHORT_TYPE) {
+				g2.setColor(GUIConstants.SHORT_TRAIN_COLOR); 
+			}
+			else {
+				g2.setColor(GUIConstants.LONG_TRAIN_COLOR); 
+			}
 			g2.drawLine(LINE_X + train.getCurrentPosition(), LINE_Y - SIZE_STATION/4, 
 						LINE_X + train.getCurrentPosition(), LINE_Y + SIZE_STATION/4
 			);

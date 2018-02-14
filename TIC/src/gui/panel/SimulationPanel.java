@@ -50,9 +50,6 @@ public class SimulationPanel extends JPanel {
 	
 	// Thread of simulation
 	private Thread simulationThread;
-	
-	// If the simulation is running
-	private boolean run = false;
 
 	
 	public SimulationPanel(){
@@ -150,8 +147,12 @@ public class SimulationPanel extends JPanel {
 	 */
 	public class ActionStart implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			if (!run){
-				simulationThread.start();
+			if (!dashboard.getRun()){
+				dashboard.setRun(true) ;
+				if (simulationThread./*à faire !!!*/) {
+					System.out.println("jhdkfj");
+					simulationThread.start();
+				}
 			}
 		}
 	}
@@ -162,7 +163,7 @@ public class SimulationPanel extends JPanel {
 	public class ActionPause implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			run = false;
+			dashboard.setRun(false) ;
 		}
 	}
 		
@@ -172,8 +173,8 @@ public class SimulationPanel extends JPanel {
 	public class ActionStop implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			run = false;
+			dashboard.setRun(false) ;
 		}
 	}
-
+	
 }

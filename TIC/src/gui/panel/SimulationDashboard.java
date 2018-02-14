@@ -23,16 +23,27 @@ public class SimulationDashboard extends JPanel implements Runnable {
 	// Current cycle of the simulation
 	private int time = 0;
 	
+	// If the simulation is running
+	private boolean run = false;
+	
 	@Override
 	public void run() {
-		while(time <= GUIConstants.MAX_DURATION){
+		while(time <= GUIConstants.MAX_DURATION && run){
 			if (time % 12 == 0){
 				Line line = Line.getInstance();
 				Canton startCanton = line.getCantons().get(0);
 				if (startCanton.isFree()){
-					Train newTrain = new Train(startCanton, 50, null, Constants.TRAIN_BASIC_SPEED, Train.SHORT_TYPE);
-					line.addTrain(newTrain);
-					newTrain.start();
+					double random = (Math.random()*(2 - 0 + 1)) + 0;
+					if(random <= 1) {
+						Train newTrain = new Train(startCanton, 50, null, Constants.TRAIN_BASIC_SPEED, Train.LONG_TYPE);
+						line.addTrain(newTrain);
+						newTrain.start();
+					}
+					else {
+						Train newTrain = new Train(startCanton, 50, null, Constants.TRAIN_BASIC_SPEED, Train.SHORT_TYPE);
+						line.addTrain(newTrain);
+						newTrain.start();
+					}
 				}
 			}
 			repaint();
@@ -54,7 +65,7 @@ public class SimulationDashboard extends JPanel implements Runnable {
 		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setFont(new Font("Dialog", Font.PLAIN, 15));
-		g2.setStroke(new BasicStroke(5));
+		g2.setStroke(new BasicStroke(8));
 		Line line = Line.getInstance();
 		LinePrinter.printLine(line, g2);
 		LinePrinter.printTrains(line.getTrains(), g2);
@@ -62,6 +73,14 @@ public class SimulationDashboard extends JPanel implements Runnable {
 	
 	public int getTime(){
 		return time;
+	}
+
+	public boolean getRun(){
+		return run;
+	}
+	
+	public void setRun(boolean run) {
+		this.run = run;
 	}
 
 }

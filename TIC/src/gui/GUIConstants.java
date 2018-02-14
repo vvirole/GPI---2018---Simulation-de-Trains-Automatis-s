@@ -13,7 +13,8 @@ public class GUIConstants {
 	
 	public final static Color LINE_COLOR = new Color(30, 20, 190);
 	public final static Color STATION_COLOR = new Color(145, 55, 120);
-	public final static Color TRAIN_COLOR = new Color(250, 20, 15);
+	public final static Color SHORT_TRAIN_COLOR = new Color(250, 20, 15);
+	public final static Color LONG_TRAIN_COLOR = new Color(240, 100, 60);
 	
 	/* * * * * * * * * * * * SIMULATION CONSTANTS * * * * * * * * * * * */
 	
