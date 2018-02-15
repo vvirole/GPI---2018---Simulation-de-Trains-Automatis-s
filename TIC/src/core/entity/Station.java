@@ -36,9 +36,17 @@ public class Station {
 		this.numReserveTrain = numReserveTrain;
 		this.crowdLevel = crowdLevel;
 	}
+	
+	public synchronized void enter(Train train) {
+		
+	}
+
+	public synchronized void exit() {
+		
+	}
 		
 	
-	//GETTER AND SETTER
+	/******************************************************/
 	
 	public String getName(){
 		return name;
@@ -46,6 +54,10 @@ public class Station {
 	
 	public int getPosition(){
 		return position;
+	}
+	
+	public void setPosition(int position){
+		this.position = position;
 	}
 
 	public int getMaxPassengers() {

@@ -5,12 +5,16 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -18,9 +22,10 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import core.LineController;
 import core.entity.Line;
-import core.utility.Counter;
 import gui.GUIConstants;
+import gui.LinePrinter;
 
 /**
  * Simulation panel
@@ -32,13 +37,15 @@ import gui.GUIConstants;
  * @author Vincent Virole
  *
  */
-public class SimulationPanel extends JPanel {
+public class SimulationPanel extends JPanel implements Observer {
 
 	private static final long serialVersionUID = 1722047581362200550L;
 	
 	private static final int MARGIN = 80;
 	
 	private JPanel userPanel;
+	private JPanel dashboardPanel;
+	
 	private JLabel jlTitle;
 	private JLabel jlTurn;
 	
@@ -50,8 +57,11 @@ public class SimulationPanel extends JPanel {
 	private ImageIcon imageBack;
 	private ImageIcon imageStop;
 	
-	// Sub panel that displays the line
-	private SimulationDashboard dashboard;
+	// The instance of the line
+	private Line line = Line.getInstance();
+		
+	// The controller
+	private LineController controller = new LineController(this);
 	
 	// Thread of simulation
 	private Thread simulationThread;
@@ -75,8 +85,21 @@ public class SimulationPanel extends JPanel {
 		userPanel.setBackground(Color.DARK_GRAY);
 		userPanel.setPreferredSize(new Dimension(GUIConstants.WINDOW_WIDTH, 150));
 		
-		dashboard = new SimulationDashboard(this);
-		dashboard.setPreferredSize(new Dimension(GUIConstants.LINE_LENGTH, 400));
+		dashboardPanel = new JPanel(){
+			private static final long serialVersionUID = 1L;
+			/**
+			 * Draw the line and the trains
+			 * @param g
+			 */
+			@Override
+			public void paintComponent(Graphics g) {
+				Graphics2D g2 = (Graphics2D) g;
+				g2.setFont(new Font("Dialog", Font.PLAIN, 15));
+				LinePrinter.printLine(line, g2);
+				LinePrinter.printTrains(line.getTrains(), g2);
+			}
+		};
+		dashboardPanel.setPreferredSize(new Dimension(GUIConstants.LINE_LENGTH, 400));
 		
 		/***************** LABELS *****************/
 		
@@ -134,7 +157,7 @@ public class SimulationPanel extends JPanel {
 		
 		/**************** ADD **********************/
 		
-		add(dashboard, BorderLayout.NORTH);
+		add(dashboardPanel, BorderLayout.NORTH);
 		add(userPanel, BorderLayout.SOUTH);
 	}
 	
@@ -154,10 +177,14 @@ public class SimulationPanel extends JPanel {
 	}
 	
 	/**
-	 * Update the current turn
+	 * Update the render of this panel when he receives a notification
+	 * @param obervable 
+	 * @param object
 	 */
-	public void update(){
-		jlTurn.setText("Cycle : " + Counter.getInstance().getValue());
+	@Override
+	public void update(Observable observable, Object object) {
+		jlTurn.setText("Cycle : " + ((LineController) observable).getTime());
+		repaint();	
 	}
 	
 	
@@ -170,8 +197,8 @@ public class SimulationPanel extends JPanel {
 	 */
 	public class ActionStart implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			if (!dashboard.isRunning()){
-				simulationThread = new Thread(dashboard);
+			if (!line.isWorking()){
+				simulationThread = new Thread(controller);
 				simulationThread.start();
 			}
 		}
@@ -183,7 +210,7 @@ public class SimulationPanel extends JPanel {
 	public class ActionPause implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			dashboard.setRunning(false);
+			line.setWorking(false);
 		}
 	}
 		
@@ -193,7 +220,7 @@ public class SimulationPanel extends JPanel {
 	public class ActionStop implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			dashboard.setRunning(false);
+			
 		}
 	}
 

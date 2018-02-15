@@ -10,6 +10,11 @@ public class Line {
 	
 	private static Line instance ;
 	
+	//List of different period
+	public static final String PERIOD_VOID = "creuse";
+	public static final String PERIOD_NORMAL = "normale";
+	public static final String PERIOD_FULL = "pleine";
+	
 	//Name of the line
 	private String name;
 	
@@ -19,11 +24,20 @@ public class Line {
 	//Number of Canton on the line
 	private int numCanton;
 	
+	//Period of traffic (void, normal and full)
+	private String period = PERIOD_NORMAL;
+	
+	//Indicate if the line is working
+	private boolean working;
+	
 	//Canton List on the line
 	private List<Canton> cantons = new ArrayList<Canton>();
 	
 	//List of trains on the line
 	private List<Train> trains = new ArrayList<Train>();
+	
+	//List of current incidents on the line
+	private List<Incident> incidents = new ArrayList<Incident>();
 
 
 	public Line(String name, int length, int numCanton) {
@@ -55,6 +69,8 @@ public class Line {
 		throw new TerminusException();
 	}
 	
+	/*******************************************************/
+	
 	public void addTrain(Train train){
 		trains.add(train);
 	}
@@ -63,7 +79,27 @@ public class Line {
 		return trains;
 	}
 	
-	//GETTER AND SETTER
+	public List<Canton> getCantons() {
+		return cantons;
+	}
+	
+	public Canton getCanton(int i) {
+		return cantons.get(i);
+	}
+
+	public void setCantons(List<Canton> cantons) {
+		this.cantons = cantons;
+	}
+	
+	public void addIncident(Incident incident){
+		incidents.add(incident);
+	}
+	
+	public List<Incident> getIncidents() {
+		return incidents;
+	} 
+	
+	/*****************************************************/
 	
 	public static Line getInstance() {
 		return instance;
@@ -92,17 +128,21 @@ public class Line {
 	public void setNumCanton(int numCanton) {
 		this.numCanton = numCanton;
 	}
-
-	public List<Canton> getCantons() {
-		return cantons;
+	
+	public String getPeriod(){
+		return period;
 	}
 	
-	public Canton getCanton(int i) {
-		return cantons.get(i);
+	public void setPeriod(String period){
+		this.period = period;
 	}
-
-	public void setCantons(List<Canton> cantons) {
-		this.cantons = cantons;
+	
+	public boolean isWorking(){
+		return working;
+	}
+	
+	public void setWorking(boolean working){
+		this.working = working;
 	}
 	
 }

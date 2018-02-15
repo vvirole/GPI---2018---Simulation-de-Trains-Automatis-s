@@ -2,16 +2,17 @@ package core.entity;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import core.Constants;
 import core.TerminusException;
-import gui.GUIConstants;
 
 public class Train extends Thread {
 
 	//List of the different train
 	public final static int SHORT_TYPE = 0;
 	public final static int LONG_TYPE = 1;
+	public final static int RESERVE_TYPE = 2;
 	
 	//Maximum capacity of the Train
 	private int maxPassengers;
@@ -43,18 +44,18 @@ public class Train extends Thread {
 	
 	/**************************************************************************/
 
-	public Train(Canton currentCanton, int currentPassenger, Map<Integer, Integer> destination, int speed, int type) {
+	public Train(Canton currentCanton, int currentPassenger, int speed, int type) {
 		this.currentCanton = currentCanton;
 		this.currentPassenger = currentPassenger;
-		this.destination = destination;
 		this.speed = speed;
 		this.type = type;
 		currentCanton.enter(this);
 		
-		// Initialisation of the capacity of train according to his size
+		// Initialisation of the capacity of train according to the type
 		switch(type){
 			case SHORT_TYPE : maxPassengers = Constants.SHORT_TRAIN_CAPACITY; break;
 			case LONG_TYPE : maxPassengers = Constants.LONG_TRAIN_CAPACITY; break;
+			case RESERVE_TYPE : maxPassengers = (Constants.SHORT_TRAIN_CAPACITY + Constants.LONG_TRAIN_CAPACITY) / 2; break;
 			default : break;
 		}
 	}
@@ -64,13 +65,13 @@ public class Train extends Thread {
 		running = true;
 		while (!arrived){
 			try {
-				sleep(GUIConstants.TIME_UNIT);
+				sleep(Constants.TIME_UNIT);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 			while (running) {
 				try {
-					sleep(GUIConstants.TIME_UNIT);
+					sleep(Constants.TIME_UNIT);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
@@ -151,7 +152,7 @@ public class Train extends Thread {
 	public void setSpeed(int speed){
 		this.speed = speed;
 	}
-
+	
 	public void setDestination(Map<Integer, Integer> destination) {
 		this.destination = destination;
 	}

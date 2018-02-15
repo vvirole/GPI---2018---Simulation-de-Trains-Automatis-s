@@ -61,10 +61,14 @@ public class Canton {
 		return startPoint;
 	}
 	
+	public void setStartPoint(int startPoint){
+		this.startPoint = startPoint;
+	}
+	
 	public int getEndPoint(){
 		return startPoint + length;
 	}
-
+	
 	public int getLength() {
 		return length;
 	}
@@ -87,6 +91,10 @@ public class Canton {
 
 	public Station getStation() {
 		return station;
+	}
+	
+	public void setStation(Station station) {
+		this.station = station;
 	}
 	
 }

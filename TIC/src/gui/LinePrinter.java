@@ -1,13 +1,19 @@
 package gui;
 
+import static gui.GUIConstants.LINE_COLOR;
+import static gui.GUIConstants.LINE_X;
+import static gui.GUIConstants.LINE_Y;
+import static gui.GUIConstants.SIZE_STATION;
+
+import java.awt.BasicStroke;
 import java.awt.Graphics2D;
 import java.util.List;
+import java.util.logging.Logger;
 
 import core.entity.Canton;
 import core.entity.Line;
 import core.entity.Station;
 import core.entity.Train;
-import static gui.GUIConstants.*;
 
 /**
  * Draw elements that a line is composed
@@ -24,6 +30,7 @@ public class LinePrinter {
 	 */
 	public static void printLine(Line line, Graphics2D g2){
 		g2.setColor(GUIConstants.LINE_COLOR);
+		g2.setStroke(new BasicStroke(GUIConstants.LINE_STROKE));
 		g2.drawLine(LINE_X, LINE_Y, LINE_X + line.getLength(), LINE_Y);
 		line.getCantons().forEach(canton -> printCanton(canton, g2));
 	}
@@ -48,6 +55,7 @@ public class LinePrinter {
 	 */
 	private static void printStation(Station station, Graphics2D g2){
 		g2.setColor(GUIConstants.STATION_COLOR);
+		g2.setStroke(new BasicStroke(GUIConstants.STATION_STROKE));
 		g2.drawLine(LINE_X + station.getPosition(), LINE_Y - SIZE_STATION/2, 
 					LINE_X + station.getPosition(), LINE_Y + SIZE_STATION/2
 		); 
@@ -61,8 +69,19 @@ public class LinePrinter {
 	 * @param g2
 	 */
 	public static void printTrains(List<Train> trains, Graphics2D g2){
-		g2.setColor(GUIConstants.TRAIN_COLOR); 
 		for (Train train : trains){
+			switch (train.getType()){
+				case Train.SHORT_TYPE : 	g2.setColor(GUIConstants.SHORT_TRAIN_COLOR); 
+											g2.setStroke(new BasicStroke(GUIConstants.SHORT_TRAIN_STROKE));
+											break;
+				case Train.LONG_TYPE : 		g2.setColor(GUIConstants.LONG_TRAIN_COLOR); 
+											g2.setStroke(new BasicStroke(GUIConstants.LONG_TRAIN_STROKE));
+											break;
+				case Train.RESERVE_TYPE : 	g2.setColor(GUIConstants.RESERVE_TRAIN_COLOR); 
+											g2.setStroke(new BasicStroke(GUIConstants.RESERVE_TRAIN_STROKE));
+											break;
+				default : Logger.getAnonymousLogger().info("Unknow type of train"); return;
+			}
 			g2.drawLine(LINE_X + train.getCurrentPosition(), LINE_Y - SIZE_STATION/4, 
 						LINE_X + train.getCurrentPosition(), LINE_Y + SIZE_STATION/4
 			);
