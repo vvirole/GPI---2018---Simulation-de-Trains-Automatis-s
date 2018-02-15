@@ -1,11 +1,11 @@
 15/02/2018
 
-Bugs trouvés : 
+Bugs trouvÃ©s : 
 
--boutons lors de la simulation qui ne fonctionne pas hormis le bouton de démarage (erreur qui apparaît si on reclique dessus).
--possibilités de mettre des nombres négatifs lors du paramétrage et ensuite de pouvoir lancer la simulation 
+-boutons lors de la simulation qui ne fonctionnent pas hormis le bouton de dÃ©marage (erreur qui apparaÃ®t si on reclique dessus).
+-possibilitÃ©s de mettre des nombres nÃ©gatifs lors du paramÃ©trage et ensuite de pouvoir lancer la simulation. 
 
-Améliorations ergonomique possibles :
+AmÃ©liorations ergonomique possibles :
 
--Ajouter un bouton pour augmenter la vitesse de la simulation (augmente la facilité des tests et d'obtention d'événements).
--Ajouter un bouton pour revenir sur l'écran de sélection des options.
+-Ajouter un bouton pour augmenter la vitesse de la simulation (augmente la facilitÃ© des tests et d'obtention d'Ã©vÃ©nements).
+-Ajouter un bouton pour revenir sur l'Ã©cran de sÃ©lection des options.
