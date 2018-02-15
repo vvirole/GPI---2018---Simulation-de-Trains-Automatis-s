@@ -79,7 +79,7 @@ public class XMLParser {
 	 */
 	public Map<String, Map<String, String>> getListInfos(String tagname){
 		
-		// We get the list of node hat have the tagname specified
+		// We get the list of node that have the tagname specified
 		Map<String, Map<String, String>> result = new HashMap<String, Map<String, String>>();
 		
 		// Normally, there is only one child found with the tagname given
