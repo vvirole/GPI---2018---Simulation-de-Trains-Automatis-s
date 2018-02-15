@@ -4,15 +4,15 @@ import java.awt.BasicStroke;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.JPanel;
 
 import core.Constants;
+import core.LineController;
 import core.entity.Canton;
 import core.entity.Line;
 import core.entity.Train;
+import core.utility.Counter;
 import gui.GUIConstants;
 import gui.LinePrinter;
 
@@ -20,17 +20,31 @@ public class SimulationDashboard extends JPanel implements Runnable {
 
 	private static final long serialVersionUID = -6106553604954976038L;
 	
-	// Current cycle of the simulation
-	private int time = 0;
+	// The parent component
+	private SimulationPanel parent;
 	
-	// List of trains that are on the line
-	private List<Train> trains = new ArrayList<Train>();
+	// The line
+	private Line line = Line.getInstance();
+	
+	// The controller
+	private LineController controller = new LineController(line);
+	
+	// Counter of the simulation
+	private Counter counter = Counter.newInstance();
+	
+	// If the simulation is running
+	private boolean running = false;
+	
+	public SimulationDashboard(SimulationPanel parent) {
+		this.parent = parent;
+	}
 
 	@Override
 	public void run() {
-		while(time <= GUIConstants.MAX_DURATION){
-			if (time % 12 == 0){
-				Line line = Line.getInstance();
+		running = true;
+		controller.runTrains();
+		while(running && counter.getValue() <= GUIConstants.MAX_DURATION){
+			if (counter.getValue() % 12 == 0){
 				Canton startCanton = line.getCantons().get(0);
 				if (startCanton.isFree()){
 					Train newTrain = new Train(startCanton, 50, null, Constants.TRAIN_BASIC_SPEED, Train.SHORT_TYPE);
@@ -44,8 +58,10 @@ public class SimulationDashboard extends JPanel implements Runnable {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			time++;
+			counter.increment();
+			parent.update();
 		}
+		controller.stopTrains();
 	}
 	
 	/**
@@ -58,13 +74,16 @@ public class SimulationDashboard extends JPanel implements Runnable {
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setFont(new Font("Dialog", Font.PLAIN, 15));
 		g2.setStroke(new BasicStroke(5));
-		Line line = Line.getInstance();
 		LinePrinter.printLine(line, g2);
 		LinePrinter.printTrains(line.getTrains(), g2);
 	}
 	
-	public int getTime(){
-		return time;
+	public boolean isRunning(){
+		return running;
+	}
+	
+	public void setRunning(boolean running) {
+		this.running = running;
 	}
 
 }

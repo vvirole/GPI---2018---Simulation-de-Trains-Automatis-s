@@ -6,7 +6,6 @@ import java.util.Map;
 import core.Constants;
 import core.TerminusException;
 import gui.GUIConstants;
-import sun.rmi.runtime.Log;
 
 public class Train extends Thread {
 
@@ -33,7 +32,10 @@ public class Train extends Thread {
 	private Map<Integer,Integer> destination = new HashMap<Integer,Integer>();
 	
 	// Indicate if the train reach the end of line
-	private boolean hasArrived = false;
+	private boolean arrived = false;
+	
+	// Indicate if the train is running
+	private boolean running = false;
 	
 	// Speed of the train
 	private int speed;
@@ -59,30 +61,47 @@ public class Train extends Thread {
 	
 	@Override
 	public void run(){
-		while (!hasArrived) {
+		running = true;
+		while (!arrived){
 			try {
 				sleep(GUIConstants.TIME_UNIT);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			if (currentPosition + speed >= currentCanton.getEndPoint()) {
-				Line line = Line.getInstance();
+			while (running) {
 				try {
-					Canton nextCanton = line.getCantonByPosition(currentPosition + speed);
-					nextCanton.enter(this);
-				} catch (TerminusException e) {
-					hasArrived = true;
-					currentPosition = line.getLength();
+					sleep(GUIConstants.TIME_UNIT);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
 				}
-			} else {
-				updatePosition();
+				if (currentPosition + speed >= currentCanton.getEndPoint()) {
+					Line line = Line.getInstance();
+					try {
+						Canton nextCanton = line.getCantonByPosition(currentPosition + speed);
+						nextCanton.enter(this);
+					} catch (TerminusException e) {
+						arrived = true;
+						running = false;
+						currentPosition = line.getLength();
+					}
+				} else {
+					updatePosition();
+				}
 			}
 		}
-		currentCanton.exit();	
+		currentCanton.exit();
 	}
 	
 	public void updatePosition(){
 		currentPosition += speed;
+	}
+	
+	public boolean isRunning(){
+		return running;
+	}
+	
+	public void setRunning(boolean running){
+		this.running = running;
 	}
 
 	public int getMaxPassengers() {

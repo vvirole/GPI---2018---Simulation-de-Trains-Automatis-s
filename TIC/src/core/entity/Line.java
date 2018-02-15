@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import core.TerminusException;
-import gui.GUIConstants;
 
 
 public class Line {
@@ -22,15 +21,15 @@ public class Line {
 	
 	//Canton List on the line
 	private List<Canton> cantons = new ArrayList<Canton>();
-
+	
 	//List of trains on the line
 	private List<Train> trains = new ArrayList<Train>();
+
 
 	public Line(String name, int length, int numCanton) {
 		this.name = name;
 		this.length = length;
 		this.numCanton = numCanton;
-		this.startPoint = GUIConstants.WINDOW_WIDTH - length/2;
 	}
 	
 	/**

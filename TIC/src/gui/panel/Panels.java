@@ -2,7 +2,7 @@ package gui.panel;
 
 public class Panels {
 	
-	// List of panels using
+	// List of panels used
 	public static final String MENU 			= "menu";
 	public static final String INFORMATION 		= "information";
 	public static final String PARAMETERS 		= "parametres";
