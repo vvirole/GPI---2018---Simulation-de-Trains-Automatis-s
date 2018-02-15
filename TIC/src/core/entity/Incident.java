@@ -15,7 +15,7 @@ public class Incident {
 	// Fluctuation of time to resolve an incident
 	private static final float FLUCTUATION_RESOLUTION_TIME_RATIO = 0.5f;
 	
-	// The location x of incident on th line
+	// The location x of an incident on the line
 	private int location;
 	
 	// Type of incident
