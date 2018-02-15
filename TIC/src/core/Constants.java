@@ -8,24 +8,27 @@ package core;
  */
 public class Constants {
 	
-	// Maximum number of passenger on the line.
-	public static final int MAX_PASSENGER = 1000;
+	// Initial number of passengers by station
+	public static int INITIAL_PASSENGER_STATION = 100;
 	
 	// Basic speed of trains
-	public static final int TRAIN_BASIC_SPEED = 5;
+	public static int TRAIN_BASIC_SPEED = 2;
 	
 	// Numbers of persons that a short train can welcome
-	public static final int SHORT_TRAIN_CAPACITY = 150;
+	public static int SHORT_TRAIN_CAPACITY = 150;
 	
 	// Numbers of persons that a long train can welcome
-	public static final int LONG_TRAIN_CAPACITY = 300;
+	public static int LONG_TRAIN_CAPACITY = 300;
+	
+	// Default duration of a train's pause into a station 
+	public static final int DEFAULT_PAUSE_STATION = 1000;
 	
 	// Default time to resolve an incident on the line (number of cycles)
-	public static final int DEFAULT_INCIDENT_RESOLUTION_TIME = 50;
+	public static int DEFAULT_INCIDENT_RESOLUTION_TIME = 50;
 	
 	// Time of critique sections
 	public static final int TIME_UNIT = 50;
 	
-	// Frequence of arrival train on the line
+	// Average frequence of arrival train on the line
 	public static final int ARRIVAL_TRAIN_UNIT = 20;
 }

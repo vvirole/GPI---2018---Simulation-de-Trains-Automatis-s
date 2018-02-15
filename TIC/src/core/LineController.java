@@ -40,19 +40,15 @@ public class LineController extends Observable implements Runnable {
 			if (time % Constants.ARRIVAL_TRAIN_UNIT == 0){
 				Canton startCanton = line.getCantons().get(0);
 				if (startCanton.isFree()){
-					Train newTrain;
-					if (line.getPeriod().equals(Line.PERIOD_FULL)){
-						newTrain = new Train(startCanton, 50, Constants.TRAIN_BASIC_SPEED, Train.LONG_TYPE);
-					}
-					else {
-						newTrain = new Train(startCanton, 50, Constants.TRAIN_BASIC_SPEED, Train.SHORT_TYPE);
-					}
+					String currentPeriod = line.getPeriod();
+					Train newTrain = new Train(startCanton, 0, Constants.TRAIN_BASIC_SPEED, 
+								(currentPeriod.equals(Line.PERIOD_FULL) ? Train.LONG_TYPE : Train.SHORT_TYPE));
 					line.addTrain(newTrain);
 					newTrain.start();
 				}
 			}
 			
-			// Notify the simulation panel that there is a change
+			// Notify the simulation panel that there is a change (repaint needed)
 			setChanged();
 			notifyObservers(); 
 			clearChanged();

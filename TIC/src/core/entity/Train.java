@@ -2,10 +2,11 @@ package core.entity;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Logger;
+import java.util.Map.Entry;
 
 import core.Constants;
 import core.TerminusException;
+import core.utility.RandomUtility;
 
 public class Train extends Thread {
 
@@ -29,10 +30,10 @@ public class Train extends Thread {
 	//Type of the train
 	private int type;
 	
-	//Contain the number of the passenger and the Station where they want to go
-	private Map<Integer,Integer> destination = new HashMap<Integer,Integer>();
+	//Contains the stations and the number of passengers which want to get off
+	private Map<Station,Integer> destinations = new HashMap<Station,Integer>();
 	
-	// Indicate if the train reach the end of line
+	// Indicate if the train reached the end of line
 	private boolean arrived = false;
 	
 	// Indicate if the train is running
@@ -40,6 +41,9 @@ public class Train extends Thread {
 	
 	// Speed of the train
 	private int speed;
+	
+	// The line where the train is running
+	private Line line = Line.getInstance();
 	
 	
 	/**************************************************************************/
@@ -51,10 +55,15 @@ public class Train extends Thread {
 		this.type = type;
 		currentCanton.enter(this);
 		
+		// Initialisation of the map destination 
+		for (Station station : line.getStationList()){
+			destinations.put(station, 0); // There are no passengers at the beginning
+		}
+		
 		// Initialisation of the capacity of train according to the type
 		switch(type){
-			case SHORT_TYPE : maxPassengers = Constants.SHORT_TRAIN_CAPACITY; break;
-			case LONG_TYPE : maxPassengers = Constants.LONG_TRAIN_CAPACITY; break;
+			case SHORT_TYPE : 	maxPassengers = Constants.SHORT_TRAIN_CAPACITY; break;
+			case LONG_TYPE : 	maxPassengers = Constants.LONG_TRAIN_CAPACITY; break;
 			case RESERVE_TYPE : maxPassengers = (Constants.SHORT_TRAIN_CAPACITY + Constants.LONG_TRAIN_CAPACITY) / 2; break;
 			default : break;
 		}
@@ -76,16 +85,16 @@ public class Train extends Thread {
 					e.printStackTrace();
 				}
 				if (currentPosition + speed >= currentCanton.getEndPoint()) {
-					Line line = Line.getInstance();
 					try {
-						Canton nextCanton = line.getCantonByPosition(currentPosition + speed);
-						nextCanton.enter(this);
+						Station station = currentCanton.getStation();
+						station.enter(this);
 					} catch (TerminusException e) {
 						arrived = true;
 						running = false;
-						currentPosition = line.getLength();
+						line.getTrains().remove(this);
 					}
-				} else {
+				} 
+				else {
 					updatePosition();
 				}
 			}
@@ -93,9 +102,42 @@ public class Train extends Thread {
 		currentCanton.exit();
 	}
 	
+	/**
+	 * Action specified that somes passengers enters on this train
+	 * @param nbPassengers the number of passenger that can enter on the train
+	 */
+	public void addPassengers(int nbPassengers){
+		int remaining = nbPassengers;
+		for (int i = 0 ; i < nbPassengers ; i++){
+			for (Entry<Station, Integer> entry : destinations.entrySet()){
+				Station dest = entry.getKey();
+				Integer number = entry.getValue();
+				
+				// ================ A AFFINER ======================
+				int rand = RandomUtility.rand(0, remaining);
+				int newValue = rand + number;		
+				// ===================================================		
+				destinations.put(dest, newValue);
+				remaining -= rand;
+			}
+		}
+	}
+	
+	/**
+	 * Remove a station destination from the map destinations
+	 */
+	public void removeDestination(Station station){
+		destinations.remove(station);
+	}
+	
+	/**
+	 * Update the position of train according to his own speed
+	 */
 	public void updatePosition(){
 		currentPosition += speed;
 	}
+	
+	/*******************************************************************/
 	
 	public boolean isRunning(){
 		return running;
@@ -129,8 +171,8 @@ public class Train extends Thread {
 		return speed;
 	}
 
-	public Map<Integer, Integer> getDestination() {
-		return destination;
+	public Map<Station, Integer> getDestination() {
+		return destinations;
 	}
 
 	public void setCurrentPassenger(int currentPassenger) {
@@ -153,8 +195,8 @@ public class Train extends Thread {
 		this.speed = speed;
 	}
 	
-	public void setDestination(Map<Integer, Integer> destination) {
-		this.destination = destination;
+	public void setDestinations(Map<Station, Integer> destination) {
+		this.destinations = destination;
 	}
 		
 }

@@ -58,13 +58,13 @@ public class ParamPanel extends JPanel {
 	// ----------------- TEXT ------------------- //
 	
 	private JLabel jlChooser;
-	private JLabel jlNbMaxTraveler;
+	private JLabel jlNbInitPassenger;
 	private JLabel jlNbShortTrain;
 	private JLabel jlNbLongTrain;
 	
 	private JLabel jlLuckAccident;
-	private JLabel jlTimetoResolveProblem;
-	private JLabel jlTimeofSimulation;
+	private JLabel jlTimeResolveProblem;
+	private JLabel jlTimeSimulation;
 	private JLabel jlTrainBasicSpeed;
 	
 	private ImageIcon imageStart;
@@ -76,20 +76,19 @@ public class ParamPanel extends JPanel {
 	
 	// ----------------- INPUTS ------------------- //
 	
-	private JSlider jsNbStation;
 	private JSlider jsLuckAccident;
+	private JSlider jsTrainBasicSpeed;
 	
-	private JTextField jtfMaxTraveler;
+	private JTextField jtfInitPassenger;
 	private JTextField jtfNbShortTrain;
 	private JTextField jtfNbLongTrain;
 	private JTextField jtfTimetoResolveProblem;
 	private JTextField jtfTimeofSimulation;
-	private JTextField jtfTrainBasicSpeed;
 	
 	// ----------------- CONSTANTS ------------------- //
 	
 	private static final int TEXTFIELD_SIZE = 7;
-	private static final int SPACING = 5;
+	private static final int SPACING = 7;
 	
 	
 	
@@ -124,10 +123,10 @@ public class ParamPanel extends JPanel {
 		timeParameters.setBackground(Color.WHITE);
 		navigation.setBackground(Color.WHITE);
 		
-		nbParameters.setBorder(BorderFactory.createTitledBorder(null, "Initialisation ligne de train",
+		nbParameters.setBorder(BorderFactory.createTitledBorder(null, "Paramètre de la ligne de train",
 			      TitledBorder.DEFAULT_JUSTIFICATION,
 			      TitledBorder.DEFAULT_POSITION, null, Color.BLACK));
-		timeParameters.setBorder(BorderFactory.createTitledBorder(null, "Paramètres temps et accidents",
+		timeParameters.setBorder(BorderFactory.createTitledBorder(null, "Gestion du temps et des incidents",
 			      TitledBorder.DEFAULT_JUSTIFICATION,
 			      TitledBorder.DEFAULT_POSITION, null, Color.BLACK));
 		navigation.setBorder(BorderFactory.createTitledBorder(null, "Navigation",
@@ -150,45 +149,47 @@ public class ParamPanel extends JPanel {
 		/************************* LABELS ******************************/
 		
 		jlChooser = new JLabel ("• Choisissez le fichier XML :");
-		jlNbMaxTraveler = new JLabel ("• Nombre max de voyageurs sur la ligne :");
+		jlNbInitPassenger = new JLabel ("• Nombre initial de voyageurs dans les gares :");
 		jlNbShortTrain = new JLabel ("• Nombre max de voyageurs dans un train court :");
 		jlNbLongTrain = new JLabel ("• Nombre max de voyageurs dans un train long :");
 		
-		jlLuckAccident = new JLabel ("• Chance d'avoir un accident :");
-		jlTimetoResolveProblem = new JLabel ("• Temps moyen pour résoudre un problème :");
-		jlTimeofSimulation = new JLabel ("• Durée de la simulation (en cycles) :");
-		jlTrainBasicSpeed = new JLabel ("• Vitesse initiale des trains :");
+		jlLuckAccident = new JLabel ("• Ratio d'apparition d'incident sur la ligne :");
+		jlTimeResolveProblem = new JLabel ("• Temps moyen pour résoudre un problème :");
+		jlTimeSimulation = new JLabel ("• Durée de la simulation (en cycles) :");
+		jlTrainBasicSpeed = new JLabel ("• Vitesse par défault des trains :");
 		
-		/********************** SLIDERS *********************************/
+		/************************* TEXTFIELDS ******************************/
 		
-		jsNbStation = new JSlider(JSlider.HORIZONTAL, 5, 20, 8);
-		jsLuckAccident = new JSlider(JSlider.HORIZONTAL, 0, 10, 0);
-		
-		jtfMaxTraveler = new JTextField(TEXTFIELD_SIZE);
+		jtfInitPassenger = new JTextField(TEXTFIELD_SIZE);
 		jtfNbShortTrain = new JTextField(TEXTFIELD_SIZE);
 		jtfNbLongTrain = new JTextField(TEXTFIELD_SIZE);
 		jtfTimetoResolveProblem = new JTextField(TEXTFIELD_SIZE);
 		jtfTimeofSimulation = new JTextField(TEXTFIELD_SIZE);
-		jtfTrainBasicSpeed = new JTextField(TEXTFIELD_SIZE);
 		
-		jtfMaxTraveler.setHorizontalAlignment(JTextField.CENTER);
+		jtfInitPassenger.setHorizontalAlignment(JTextField.CENTER);
 		jtfNbShortTrain.setHorizontalAlignment(JTextField.CENTER);
 		jtfNbLongTrain.setHorizontalAlignment(JTextField.CENTER);
 		jtfTimetoResolveProblem.setHorizontalAlignment(JTextField.CENTER);
 		jtfTimeofSimulation.setHorizontalAlignment(JTextField.CENTER);
-		jtfTrainBasicSpeed.setHorizontalAlignment(JTextField.CENTER);
+	
 		
-		jsNbStation.setPaintTicks(true);
-		jsNbStation.setPaintLabels(true);
-		jsNbStation.setMinorTickSpacing(1);
-		jsNbStation.setMajorTickSpacing(5);
-		jsNbStation.setBackground(Color.WHITE);
+		/********************** SLIDERS *********************************/
 		
+		jsLuckAccident = new JSlider(JSlider.HORIZONTAL, 0, 10, 0);
 		jsLuckAccident.setPaintTicks(true);
 		jsLuckAccident.setPaintLabels(true);
 		jsLuckAccident.setMinorTickSpacing(1);
 		jsLuckAccident.setMajorTickSpacing(2);
 		jsLuckAccident.setBackground(Color.WHITE);
+		jsLuckAccident.setValue(5);
+		
+		jsTrainBasicSpeed = new JSlider(JSlider.HORIZONTAL, 0, 10, 0);
+		jsTrainBasicSpeed.setPaintTicks(true);
+		jsTrainBasicSpeed.setPaintLabels(true);
+		jsTrainBasicSpeed.setMinorTickSpacing(1);
+		jsTrainBasicSpeed.setMajorTickSpacing(2);
+		jsTrainBasicSpeed.setBackground(Color.WHITE);
+		jsTrainBasicSpeed.setValue(5);
 		
 		
 		/*********************** POSITIONS *******************************/
@@ -200,7 +201,7 @@ public class ParamPanel extends JPanel {
 		gbc.gridx = 0; gbc.gridy = 0;
 		nbParameters.add(jlChooser, gbc);
 		gbc.gridx = 0; gbc.gridy = 1;
-		nbParameters.add(jlNbMaxTraveler, gbc);
+		nbParameters.add(jlNbInitPassenger, gbc);
 		gbc.gridx = 0; gbc.gridy = 2;
 		nbParameters.add(jlNbShortTrain, gbc);	
 		gbc.gridx = 0; gbc.gridy = 3;
@@ -210,7 +211,7 @@ public class ParamPanel extends JPanel {
 		gbc.gridx = 1; gbc.gridy = 0;
 		nbParameters.add(jbChooser, gbc);
 		gbc.gridx = 1; gbc.gridy = 1;
-		nbParameters.add(jtfMaxTraveler, gbc);
+		nbParameters.add(jtfInitPassenger, gbc);
 		gbc.gridx = 1; gbc.gridy = 2;
 		nbParameters.add(jtfNbShortTrain, gbc);
 		gbc.gridx = 1; gbc.gridy = 3;
@@ -218,23 +219,23 @@ public class ParamPanel extends JPanel {
 		
 		gbc.anchor = GridBagConstraints.LINE_START;
 		gbc.gridx = 0; gbc.gridy = 0;
-		timeParameters.add(jlTimetoResolveProblem, gbc);	
+		timeParameters.add(jlTimeSimulation, gbc);
 		gbc.gridx = 0; gbc.gridy = 1;
-		timeParameters.add(jlLuckAccident, gbc);
+		timeParameters.add(jlTimeResolveProblem, gbc);
 		gbc.gridx = 0; gbc.gridy = 2;
 		timeParameters.add(jlTrainBasicSpeed, gbc);
 		gbc.gridx = 0; gbc.gridy = 3;
-		timeParameters.add(jlTimeofSimulation, gbc);
+		timeParameters.add(jlLuckAccident, gbc);
 	
 		gbc.anchor = GridBagConstraints.CENTER;
 		gbc.gridx = 1; gbc.gridy = 0;
-		timeParameters.add(jtfTimetoResolveProblem, gbc);
-		gbc.gridx = 1; gbc.gridy = 1;
-		timeParameters.add(jsLuckAccident, gbc);
-		gbc.gridx = 1; gbc.gridy = 2;
-		timeParameters.add(jtfTrainBasicSpeed, gbc);
-		gbc.gridx = 1; gbc.gridy = 3;
 		timeParameters.add(jtfTimeofSimulation, gbc);
+		gbc.gridx = 1; gbc.gridy = 1;
+		timeParameters.add(jtfTimetoResolveProblem, gbc);
+		gbc.gridx = 1; gbc.gridy = 2;
+		timeParameters.add(jsTrainBasicSpeed, gbc);
+		gbc.gridx = 1; gbc.gridy = 3;
+		timeParameters.add(jsLuckAccident, gbc);
 		
 		gbc.insets = new Insets(SPACING, 5*SPACING, SPACING, 5*SPACING);
 		gbc.gridx = 0; gbc.gridy = 0;
@@ -256,12 +257,12 @@ public class ParamPanel extends JPanel {
 	private void initFont() {		
 		Font font = new Font(Font.DIALOG, Font.BOLD, 15);		
 		jlChooser.setFont(font);
-		jlNbMaxTraveler.setFont(font);
+		jlNbInitPassenger.setFont(font);
 		jlNbShortTrain.setFont(font);
 		jlNbLongTrain.setFont(font);
 		jlLuckAccident.setFont(font);
-		jlTimetoResolveProblem.setFont(font);
-		jlTimeofSimulation.setFont(font);
+		jlTimeResolveProblem.setFont(font);
+		jlTimeSimulation.setFont(font);
 		jlTrainBasicSpeed.setFont(font);
 		jbBack.setFont(font);
 		jbStart.setFont(font);	
@@ -269,15 +270,27 @@ public class ParamPanel extends JPanel {
 	
 	
 	/**
-	 * Initiate Parameters with Constant on core/Constants
+	 * Initiate Parameters with constants defined in package core.constants
+	 * @see core.constants
 	 */
 	private void initParam() {	
-		jtfMaxTraveler.setText(String.valueOf(Constants.MAX_PASSENGER));
+		jtfInitPassenger.setText(String.valueOf(Constants.INITIAL_PASSENGER_STATION));
 		jtfNbShortTrain.setText(String.valueOf(Constants.SHORT_TRAIN_CAPACITY));
 		jtfNbLongTrain.setText(String.valueOf(Constants.LONG_TRAIN_CAPACITY));
-		//jtfTimetoResolveProblem.setText(String.valueOf(Constants.TIME_RESOLVE_PROBLEM));
+		jtfTimetoResolveProblem.setText(String.valueOf(Constants.DEFAULT_INCIDENT_RESOLUTION_TIME));
 		jtfTimeofSimulation.setText(String.valueOf(GUIConstants.MAX_DURATION));
-		jtfTrainBasicSpeed.setText(String.valueOf(Constants.TRAIN_BASIC_SPEED));	
+	}
+	
+	/**
+	 * 
+	 */
+	private void applyParam(){
+		GUIConstants.MAX_DURATION					= Integer.parseInt(jtfTimeofSimulation.getText());
+		Constants.INITIAL_PASSENGER_STATION 		= Integer.parseInt(jtfInitPassenger.getText());
+		Constants.SHORT_TRAIN_CAPACITY				= Integer.parseInt(jtfNbShortTrain.getText());
+		Constants.LONG_TRAIN_CAPACITY				= Integer.parseInt(jtfNbLongTrain.getText());
+		Constants.DEFAULT_INCIDENT_RESOLUTION_TIME	= Integer.parseInt(jtfTimetoResolveProblem.getText());
+		Constants.TRAIN_BASIC_SPEED					= jsTrainBasicSpeed.getValue();
 	}
 	
 	/***********************************************************************************
@@ -306,6 +319,7 @@ public class ParamPanel extends JPanel {
 		public void actionPerformed(ActionEvent e) {
 			try{
 				if(file != null) {
+					applyParam();
 					LineBuilder.buildLine(file) ; // Initialisation of the line according to the xml file
 					gui.GUIFrame.setCurrentPanel(Panels.SIMULATION);
 				}

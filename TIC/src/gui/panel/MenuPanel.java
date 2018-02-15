@@ -51,6 +51,7 @@ public class MenuPanel extends JPanel {
 	
 	public MenuPanel(){
 		setLayout(null);
+		setBackground(Color.WHITE);
 		initComponents();
 		initFont();
 	}

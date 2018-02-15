@@ -22,6 +22,7 @@ public class GUIConstants {
 	public static final int LINE_LENGTH = 1100;
 	public static final int LINE_X = WINDOW_WIDTH/2 - LINE_LENGTH/2;
 	public static final int LINE_Y = 250;
+	public static final int SIZE_STATION = 20;
 	
 	// -------------------------------------------------------------- //
 	
@@ -33,7 +34,7 @@ public class GUIConstants {
 	
 	// -------------------------------------------------------------- //
 	
-	public static final int MAX_DURATION = 10000;
-	public static final int SIZE_STATION = 20;
+	public static int MAX_DURATION = 10000;
+	public static int INCIDENT_RATIO = 5;
 		
 }

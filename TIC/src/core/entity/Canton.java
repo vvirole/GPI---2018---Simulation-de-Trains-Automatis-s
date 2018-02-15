@@ -30,6 +30,7 @@ public class Canton {
 	
 	public synchronized void enter(Train train) {
 		if (occupyingTrain != null) {
+			// If the next canton is occupied, the train wait
 			train.setCurrentPosition(startPoint);
 			try {
 				wait();
@@ -38,10 +39,13 @@ public class Canton {
 			}
 		}
 		else {
+			// The train leave his current canton and the station
 			Canton oldCanton = train.getCurrentCanton();
+			oldCanton.getStation().exit();
+			oldCanton.exit();
+			// He is positionned now on this canton
 			train.setCurrentCanton(this);
 			train.updatePosition();
-			oldCanton.exit();
 			occupyingTrain = train;
 		}
 	}

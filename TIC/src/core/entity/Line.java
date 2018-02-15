@@ -47,14 +47,6 @@ public class Line {
 	}
 	
 	/**
-	 * Add a canton on the line
-	 * @param canton a canton
-	 */
-	public void addCanton(Canton canton){
-		cantons.add(canton);
-	}
-	
-	/**
 	 * Get a canton by the position of a train on the line
 	 * @param position of the train
 	 * @return the canton where the train is
@@ -69,6 +61,34 @@ public class Line {
 		throw new TerminusException();
 	}
 	
+	/**
+	 * Verify if a canton has incident or not
+	 * @param canton on the line
+	 * @return true if there is an incident, else false 
+	 */
+	public boolean hasIncident(Canton canton){
+		for (Incident incident : incidents){
+			// Position of the incident on the line
+			int position = incident.getLocation();
+			if (position > canton.getStartPoint() && position <= canton.getEndPoint()){
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * Get the list of available stations
+	 * @return a list of stations
+	 */
+	public List<Station> getStationList(){
+		List<Station> stations = new ArrayList<Station>();
+		for (Canton canton : cantons){
+			stations.add(canton.getStation());
+		}
+		return stations;
+	}
+	
 	/*******************************************************/
 	
 	public void addTrain(Train train){
@@ -77,6 +97,10 @@ public class Line {
 	
 	public List<Train> getTrains(){
 		return trains;
+	}
+	
+	public void addCanton(Canton canton){
+		cantons.add(canton);
 	}
 	
 	public List<Canton> getCantons() {
