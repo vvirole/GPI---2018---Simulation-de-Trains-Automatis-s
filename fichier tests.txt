@@ -2,8 +2,7 @@
 
 Bugs trouvés : 
 
--boutons stop lors de la simulation qui ne fonctionnent pas.
--possibilités de mettre des nombres négatifs lors du paramétrage et ensuite de pouvoir lancer la simulation. 
+
 
 Améliorations ergonomique possibles :
 
