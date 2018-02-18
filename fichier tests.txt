@@ -1,9 +1,0 @@
-15/02/2018
-
-Bugs trouvés : 
-
-
-
-Améliorations ergonomique possibles :
-
--Ajouter un bouton pour augmenter la vitesse de la simulation (augmente la facilité des tests et d'obtention d'événements).
