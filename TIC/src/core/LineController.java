@@ -42,7 +42,7 @@ public class LineController extends Observable implements Runnable {
 		while(line.isWorking() && time <= GUIConstants.MAX_DURATION){
 			if (time % Constants.ARRIVAL_TRAIN_UNIT == 0){
 				Canton startCanton = line.getCantons().get(0);
-				if (startCanton.isFree() && !startCanton.hasIncident(){
+				if (startCanton.isFree() && !startCanton.hasIncident()){
 					String currentPeriod = line.getPeriod();
 					Train newTrain = new Train(startCanton, 0, Constants.TRAIN_BASIC_SPEED, 
 								(currentPeriod.equals(Line.PERIOD_FULL) ? Train.LONG_TYPE : Train.SHORT_TYPE));
@@ -53,7 +53,7 @@ public class LineController extends Observable implements Runnable {
 			
 			int i = RandomUtility.rand(0, line.getNbCanton() - 1);
 			Canton canton = line.getCanton(i);
-			if (!canton.hasIncident() && RandomUtility.rand(0, 100) <= Constants.INCIDENT_RATIO){
+			if (!canton.hasIncident() && RandomUtility.rand(0, 100) < Constants.INCIDENT_RATIO){
 				line.newIncident(canton, Incident.INFRASTRUCTURE_INCIDENT);
 			}
 			

@@ -9,16 +9,16 @@ package core;
 public class Constants {
 	
 	// Initial number of passengers by station
-	public static int INITIAL_PASSENGER_STATION = 100;
+	public static int INITIAL_PASSENGER_STATION = 200;
 	
 	// Basic speed of trains
 	public static int TRAIN_BASIC_SPEED = 5;
 	
 	// Numbers of persons that a short train can welcome
-	public static int SHORT_TRAIN_CAPACITY = 150;
+	public static int SHORT_TRAIN_CAPACITY = 50;
 	
 	// Numbers of persons that a long train can welcome
-	public static int LONG_TRAIN_CAPACITY = 300;
+	public static int LONG_TRAIN_CAPACITY = 100;
 	
 	// Default time to resolve an incident on the line (number of cycles)
 	public static int DEFAULT_INCIDENT_RESOLUTION_TIME = 200;

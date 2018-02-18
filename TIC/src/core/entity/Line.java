@@ -49,6 +49,23 @@ public class Line {
 	}
 	
 	/**
+	 * Get the total number of passengers on the line
+	 * @return the number of passengers
+	 */
+	public int getTotalPassengers(){
+		int total = 0;
+		// Passengers on the stations
+		for (Station station : getStationList()){
+			total += station.getCurrentPassenger();
+		}
+		// Passengers on the trains
+		for (Train train : trains){
+			total += train.getCurrentPassenger();
+		}
+		return total;
+	}
+	
+	/**
 	 * Get a canton by the position of a train on the line
 	 * @param position of the train
 	 * @return the canton where the train is

@@ -202,7 +202,6 @@ public class LinePrinter {
 		int marginBar = (width/2 - widthBar)/2;
 		
 		// Bar showing the current number of passengers into the station
-		station.setCurrentPassenger(200);
 		drawBar("Pass.", posX + marginBar, posY + 2 * marginTop, widthBar, heightBar, 
 				station.getCurrentPassenger(), station.getMaxPassengers(), new Color(26, 188, 156), g2);
 		

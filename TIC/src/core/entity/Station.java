@@ -11,24 +11,24 @@ public class Station {
 	
 	// Position of the station on the line
 	private int position;
+	
+	//Crowd level of the Station
+	private int crowdLevel;
 
 	//Maximum capacity of the station
 	private int maxPassengers;
 	
 	//Number of current passenger
-	private int currentPassenger;
+	private volatile int currentPassenger;
 	
 	//Satisfaction of the passenger in the Station initialised at 75 (value beetwen 0 and 100)
-	private int satisfaction = 75;
+	private volatile int satisfaction = 75;
 	
 	//Number of reserve trains
-	private int numReserveTrain;
-	
-	//Crowd of the Station
-	private int crowdLevel;
+	private volatile int numReserveTrain;
 	
 	//The train in the Station
-	private Train arrivalTrain = null;
+	private volatile Train arrivalTrain = null;
 
 	public Station(String name, int position, int maxPassengers, int numReserveTrain, int crowdLevel) {
 		this.name = name;
@@ -36,6 +36,12 @@ public class Station {
 		this.maxPassengers = maxPassengers;
 		this.numReserveTrain = numReserveTrain;
 		this.crowdLevel = crowdLevel;
+		if (maxPassengers < Constants.INITIAL_PASSENGER_STATION){
+			this.currentPassenger = maxPassengers;
+		}
+		else {
+			this.currentPassenger = Constants.INITIAL_PASSENGER_STATION;
+		}
 	}
 	
 	public synchronized void enter(Train train) throws TerminusException {
@@ -47,11 +53,15 @@ public class Station {
 				// Pause for taking passengers of the station
 				Thread.sleep(getPauseDuration());
 				
-				// New passengers
-				int nbNewPassengers = RandomUtility.rand(0, currentPassenger);
+				// Passengers getting off the train are now into the station
+				currentPassenger += arrivalTrain.getOffPassengers(this);
+				arrivalTrain.removeDestination(this);
+				
+				// New passengers on the train
+				int nbDest = arrivalTrain.getDestination().size();
+				int nbNewPassengers = RandomUtility.rand(0, currentPassenger/(nbDest + 1));
 				currentPassenger -= nbNewPassengers;
-				currentPassenger += train.addPassengers(nbNewPassengers);
-				train.removeDestination(this);
+				currentPassenger += arrivalTrain.addPassengers(nbNewPassengers);
 				
 			} catch (InterruptedException e) {
 				e.printStackTrace();
@@ -71,6 +81,13 @@ public class Station {
 	public synchronized void exit() {
 		arrivalTrain = null;
 		notify();
+	}
+	
+	/**
+	 * Somes passengers arrive into the station and somes leave the station
+	 */
+	public void updatePassengers(){
+		
 	}
 	
 	/**

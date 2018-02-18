@@ -19,7 +19,7 @@ public class Train extends Thread {
 	private int maxPassengers;
 		
 	//Number of current passenger
-	private int currentPassenger;
+	private volatile int currentPassenger;
 	
 	//Canton of the train
 	private Canton currentCanton;
@@ -99,6 +99,7 @@ public class Train extends Thread {
 				}
 			}
 		}
+		System.out.println(this.getName() + " est arrivé au terminus avec " + currentPassenger + " passagers");
 		currentCanton.exit();
 	}
 	
@@ -109,6 +110,8 @@ public class Train extends Thread {
 	 */
 	public int addPassengers(int nbPassengers){
 		
+		if (destinations.isEmpty()) return nbPassengers;
+		
 		int remainingPlace = maxPassengers - currentPassenger; // Number of remaining places
 		int sadPassenger = 0; // Number of passengers that can't enter
 		int newPassenger = 0; // Number of passenger that can enter
@@ -117,26 +120,35 @@ public class Train extends Thread {
 			sadPassenger = nbPassengers - remainingPlace;
 			newPassenger = nbPassengers - sadPassenger;
 		}
-		
-		int remaining = newPassenger;
-		for (int i = 0 ; i < newPassenger ; i++){
-			for (Entry<Station, Integer> entry : destinations.entrySet()){
-				Station dest = entry.getKey();
-				Integer number = entry.getValue();
-				
-				// ================ A AFFINER ======================
-				int rand = RandomUtility.rand(0, remaining);
-				int newValue = rand + number;		
-				// ===================================================		
-				destinations.put(dest, newValue);
-				remaining -= rand;
-			}
+		else {
+			newPassenger = nbPassengers;
 		}
+		
+		// We generate the destination of these new passengers
+		destinations = RandomUtility.generateDest(newPassenger, destinations);
+		
+		System.out.println(newPassenger + " sont montés dans " + this.getName() + " à " + currentCanton.getStation().getName());
+		for (Entry<Station, Integer> entry : destinations.entrySet()){
+			System.out.println(entry.getKey().getName() + " => " + entry.getValue());
+		}
+		System.out.println("\n");
 		
 		// We add the new passengers on the train and return the number of passengers
 		// that can't enter on this
 		currentPassenger += newPassenger;
 		return sadPassenger;
+	}
+	
+	/**
+	 * Passengers on the train is getting off into a station
+	 * @return the number of passengers getting off
+	 */
+	public int getOffPassengers(Station station){
+		int nbPassengers = destinations.get(station);
+		destinations.remove(station);
+		currentPassenger -= nbPassengers;
+		System.out.println(nbPassengers + " sont descendus de " + this.getName() + " à " + station.getName());
+		return nbPassengers;
 	}
 	
 	/**
