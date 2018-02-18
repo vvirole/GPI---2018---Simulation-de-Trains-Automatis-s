@@ -84,18 +84,20 @@ public class Train extends Thread {
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-				if (currentPosition + speed >= currentCanton.getEndPoint()) {
-					try {
-						Station station = currentCanton.getStation();
-						station.enter(this);
-					} catch (TerminusException e) {
-						arrived = true;
-						running = false;
-						line.getTrains().remove(this);
+				if (!currentCanton.hasIncident()){
+					if (currentPosition + speed >= currentCanton.getEndPoint()) {
+						try {
+							Station station = currentCanton.getStation();
+							station.enter(this);
+						} catch (TerminusException e) {
+							arrived = true;
+							running = false;
+							line.getTrains().remove(this);
+						}
+					} 
+					else {
+						updatePosition();
 					}
-				} 
-				else {
-					updatePosition();
 				}
 			}
 		}
@@ -110,6 +112,7 @@ public class Train extends Thread {
 	 */
 	public int addPassengers(int nbPassengers){
 		
+		// The train is at the last station
 		if (destinations.isEmpty()) return nbPassengers;
 		
 		int remainingPlace = maxPassengers - currentPassenger; // Number of remaining places
