@@ -11,14 +11,14 @@ public class Canton {
 	// Position where the canton begins
 	private int startPoint;
 	
-	//If an accident occurred on the Canton
-	private boolean accident = false;
-	
 	//The station at the end the canton
 	private Station station;
 	
 	// The train in the canton
 	private Train occupyingTrain = null;
+	
+	// Indicate if there is an incident
+	private boolean incident = false;
 
 	
 	public Canton(int id, int startPoint, int length, Station station) {
@@ -55,7 +55,14 @@ public class Canton {
 		notify();
 	}
 	
-	//GETTER AND SETTER
+	/**
+	 * @return if the canton is free
+	 */
+	public boolean isFree(){
+		return (occupyingTrain == null);
+	}
+	
+	/*********************************************************/
 
 	public int getId() {
 		return id;
@@ -80,18 +87,6 @@ public class Canton {
 	public void setLength(int length) {
 		this.length = length;
 	}
-	
-	public boolean isFree(){
-		return (occupyingTrain == null);
-	}
-
-	public boolean isAccident() {
-		return accident;
-	}
-
-	public void setAccident(boolean accident) {
-		this.accident = accident;
-	}
 
 	public Station getStation() {
 		return station;
@@ -99,6 +94,14 @@ public class Canton {
 	
 	public void setStation(Station station) {
 		this.station = station;
+	}
+
+	public boolean hasIncident() {
+		return incident;
+	}
+
+	public void setIncident(boolean incident) {
+		this.incident = incident;
 	}
 	
 }

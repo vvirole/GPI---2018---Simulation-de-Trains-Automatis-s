@@ -1,9 +1,15 @@
 package core.entity;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.logging.Logger;
 
 import core.TerminusException;
+import core.utility.RandomUtility;
+import gui.GUIConstants;
 
 
 public class Line {
@@ -21,9 +27,6 @@ public class Line {
 	//Size of the line on the frame.
 	private int length;
 	
-	//Number of Canton on the line
-	private int numCanton;
-	
 	//Period of traffic (void, normal and full)
 	private String period = PERIOD_NORMAL;
 	
@@ -37,13 +40,12 @@ public class Line {
 	private List<Train> trains = new ArrayList<Train>();
 	
 	//List of current incidents on the line
-	private List<Incident> incidents = new ArrayList<Incident>();
+	private Map<Incident, Integer> incidents = new HashMap<Incident, Integer>();
 
 
-	public Line(String name, int length, int numCanton) {
+	public Line(String name, int length) {
 		this.name = name;
 		this.length = length;
-		this.numCanton = numCanton;
 	}
 	
 	/**
@@ -62,20 +64,59 @@ public class Line {
 	}
 	
 	/**
+	 * @return if there are incidents on the line
+	 */
+	public boolean hasIncident(){
+		return (incidents.size() > 0);
+	}
+	
+	/**
 	 * Verify if a canton has incident or not
 	 * @param canton on the line
 	 * @return true if there is an incident, else false 
 	 */
 	public boolean hasIncident(Canton canton){
-		for (Incident incident : incidents){
+		for (Entry<Incident, Integer> entry : incidents.entrySet()){
 			// Position of the incident on the line
-			int position = incident.getLocation();
+			int position = entry.getKey().getLocation();
 			if (position > canton.getStartPoint() && position <= canton.getEndPoint()){
 				return true;
 			}
 		}
 		return false;
 	}
+	
+	/**
+	 * New incident on a canton given
+	 * @param canton where the incident is happened
+	 * @param type of the incident
+	 */
+	public void newIncident(Canton canton, int type){
+		canton.setIncident(true);
+		Incident incident; 
+		switch(type){
+			case Incident.PASSENGER_INCIDENT : 		Station station = canton.getStation();
+													incident = new Incident(station.getPosition(), type);
+													incidents.put(incident, incident.getTimeToResolve());
+													break;
+				
+			case Incident.INFRASTRUCTURE_INCIDENT : int xMin = canton.getStartPoint() + GUIConstants.SIZE_STATION/2;
+													int xMax = canton.getEndPoint() - GUIConstants.SIZE_STATION/2;
+													incident = new Incident(RandomUtility.rand(xMin, xMax), type);
+													incidents.put(incident, incident.getTimeToResolve());
+													break;
+													
+			default : Logger.getAnonymousLogger().severe("Unknown incident type");
+		}
+	}
+	
+	/**
+	 * List the incident on the line
+	 * @return
+	 */
+	public Map<Incident, Integer> listIncidents() {
+		return incidents;
+	} 
 	
 	/**
 	 * Get the list of available stations
@@ -115,14 +156,6 @@ public class Line {
 		this.cantons = cantons;
 	}
 	
-	public void addIncident(Incident incident){
-		incidents.add(incident);
-	}
-	
-	public List<Incident> getIncidents() {
-		return incidents;
-	} 
-	
 	/*****************************************************/
 	
 	public static Line getInstance() {
@@ -145,14 +178,10 @@ public class Line {
 		this.length = length;
 	}
 
-	public int getNumCanton() {
-		return numCanton;
+	public int getNbCanton() {
+		return cantons.size();
 	}
 
-	public void setNumCanton(int numCanton) {
-		this.numCanton = numCanton;
-	}
-	
 	public String getPeriod(){
 		return period;
 	}

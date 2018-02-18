@@ -1,5 +1,7 @@
 package core;
 
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -46,7 +48,7 @@ public class LineController extends Observable implements Runnable {
 					line.addTrain(newTrain);
 					newTrain.start();
 				}
-			}
+			}	
 			
 			// Notify the simulation panel that there is a change (repaint needed)
 			setChanged();
@@ -81,11 +83,20 @@ public class LineController extends Observable implements Runnable {
 	}
 	
 	/**
-	 * Actions linked to the resolution of an incident 
+	 * Run the resolution procedure to resolve the incidents on the line
 	 */
-	public void resolveIncident(Incident incident){
-		
+	public void resolveIncident(){
+		Map<Incident, Integer> incidents = line.listIncidents();
+		for (Entry<Incident, Integer> entry : incidents.entrySet()){
+			Incident incident = entry.getKey();
+			Integer remainingTime = entry.getValue();
+			incidents.put(incident, --remainingTime);
+			if (remainingTime == 0){
+				incidents.remove(incident);
+			}
+		}
 	}
+
 	
 	/*********************************************************************/
 	

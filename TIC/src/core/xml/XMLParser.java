@@ -42,16 +42,6 @@ public class XMLParser {
 	}
 	
 	/**
-	 * Get the count of a node giving a tagname
-	 * @param tagname the name of a node
-	 * @return count of the node
-	 */
-	public int getCount(String tagname){
-		NodeList nodes = document.getElementsByTagName(tagname);
-		return nodes.getLength();
-	}
-	
-	/**
 	 * Get the name of root node
 	 * @return the name node
 	 */
@@ -79,7 +69,7 @@ public class XMLParser {
 	 */
 	public Map<String, Map<String, String>> getListInfos(String tagname){
 		
-		// We get the list of node that have the tagname specified
+		// We get the list of node hat have the tagname specified
 		Map<String, Map<String, String>> result = new HashMap<String, Map<String, String>>();
 		
 		// Normally, there is only one child found with the tagname given

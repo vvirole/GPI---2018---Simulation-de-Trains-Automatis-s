@@ -6,11 +6,14 @@ import static gui.GUIConstants.LINE_Y;
 import static gui.GUIConstants.SIZE_STATION;
 
 import java.awt.BasicStroke;
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.logging.Logger;
 
 import core.entity.Canton;
+import core.entity.Incident;
 import core.entity.Line;
 import core.entity.Station;
 import core.entity.Train;
@@ -33,6 +36,9 @@ public class LinePrinter {
 		g2.setStroke(new BasicStroke(GUIConstants.LINE_STROKE));
 		g2.drawLine(LINE_X, LINE_Y, LINE_X + line.getLength(), LINE_Y);
 		line.getCantons().forEach(canton -> printCanton(canton, g2));
+		for (Entry<Incident, Integer> entry : line.listIncidents().entrySet()){
+			printIncident(entry.getKey(), g2);
+		}
 	}
 	
 	/**
@@ -56,9 +62,7 @@ public class LinePrinter {
 	private static void printStation(Station station, Graphics2D g2){
 		g2.setColor(GUIConstants.STATION_COLOR);
 		g2.setStroke(new BasicStroke(GUIConstants.STATION_STROKE));
-		g2.drawLine(LINE_X + station.getPosition(), LINE_Y - SIZE_STATION/2, 
-					LINE_X + station.getPosition(), LINE_Y + SIZE_STATION/2
-		); 
+		g2.fillOval(LINE_X + station.getPosition() - SIZE_STATION/2, LINE_Y - SIZE_STATION/2, SIZE_STATION, SIZE_STATION);
 		int widthS = g2.getFontMetrics().stringWidth(station.getName());
 		g2.drawString(station.getName(), LINE_X + station.getPosition() - widthS/2, LINE_Y - 2 * SIZE_STATION);
 	}
@@ -86,5 +90,19 @@ public class LinePrinter {
 						LINE_X + train.getCurrentPosition(), LINE_Y + SIZE_STATION/4
 			);
 		}
+	}
+	
+	/**
+	 * Print an incident
+	 * @param incident
+	 * @param g2
+	 */
+	private static void printIncident(Incident incident, Graphics2D g2){
+		g2.setColor(Color.RED);
+		g2.setStroke(new BasicStroke(GUIConstants.LINE_STROKE));
+		int dim = SIZE_STATION/4;
+		int location = incident.getLocation();
+		g2.drawLine(LINE_X + location - dim, LINE_Y - dim, LINE_X + location + dim, LINE_Y + dim);
+		g2.drawLine(LINE_X + location + dim, LINE_Y - dim, LINE_X + location - dim, LINE_Y + dim);
 	}
 }

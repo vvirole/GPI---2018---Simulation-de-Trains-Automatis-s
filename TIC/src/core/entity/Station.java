@@ -33,9 +33,6 @@ public class Station {
 	//Crowd of the Station
 	private int crowdLevel;
 	
-	//If an accident occurred on the Station
-	private boolean accident = false;
-	
 	//The train in the Station
 	private Train arrivalTrain = null;
 
@@ -138,14 +135,6 @@ public class Station {
 
 	public void setCrowdLevel(int crowdLevel) {
 		this.crowdLevel = crowdLevel;
-	}
-
-	public boolean isAccident() {
-		return accident;
-	}
-
-	public void setAccident(boolean accident) {
-		this.accident = accident;
 	}
 
 	public Train getTrain() {

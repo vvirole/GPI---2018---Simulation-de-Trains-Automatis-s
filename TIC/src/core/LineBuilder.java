@@ -47,9 +47,6 @@ public class LineBuilder {
 		// The length of the line
 		int usedLength = 0;
 		
-		// We get the numbers of cantons
-		int numCantons = parser.getCount("cantons");
-		
 		for(Entry<String, Map<String, String>> entry : cantonsData.entrySet()){
 			
 			Map<String, String> cantonInfos = entry.getValue();
@@ -77,7 +74,7 @@ public class LineBuilder {
 		
 		// We create the line and add the cantons
 		String nameLine = parser.getTextNode("nameLine");
-		Line line = new Line(nameLine, usedLength, numCantons);
+		Line line = new Line(nameLine, usedLength);
 		cantonList.forEach(canton -> line.addCanton(canton));
 		
 		// Adjustment of the line according to the constants LINE_LENGTH defined in Constants.java

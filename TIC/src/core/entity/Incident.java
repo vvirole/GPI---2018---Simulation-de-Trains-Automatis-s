@@ -15,7 +15,7 @@ public class Incident {
 	// Fluctuation of time to resolve an incident
 	private static final float FLUCTUATION_RESOLUTION_TIME_RATIO = 0.5f;
 	
-	// The location x of an incident on the line
+	// The location x of incident on th line
 	private int location;
 	
 	// Type of incident
@@ -28,10 +28,10 @@ public class Incident {
 	
 	/**
 	 * Get the time to resolve this incident
-	 * @param period
 	 * @return the number of cycles to resolve this incident
 	 */
-	public int getTimeToResolve(String period){
+	public int getTimeToResolve(){
+		String period = Line.getInstance().getPeriod();
 		int defaultTime = Constants.DEFAULT_INCIDENT_RESOLUTION_TIME;
 		switch(period){
 			case Line.PERIOD_VOID : 	return defaultTime - RandomUtility.rand(0, Math.round(defaultTime * FLUCTUATION_RESOLUTION_TIME_RATIO)); 
