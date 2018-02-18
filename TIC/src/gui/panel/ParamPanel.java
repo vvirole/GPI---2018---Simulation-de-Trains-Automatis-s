@@ -62,7 +62,7 @@ public class ParamPanel extends JPanel {
 	private JLabel jlNbShortTrain;
 	private JLabel jlNbLongTrain;
 	
-	private JLabel jlLuckAccident;
+	private JLabel jlIncidentRation;
 	private JLabel jlTimeResolveProblem;
 	private JLabel jlTimeSimulation;
 	private JLabel jlTrainBasicSpeed;
@@ -76,7 +76,7 @@ public class ParamPanel extends JPanel {
 	
 	// ----------------- INPUTS ------------------- //
 	
-	private JSlider jsLuckAccident;
+	private JSlider jsIncidentRatio;
 	private JSlider jsTrainBasicSpeed;
 	
 	private JTextField jtfInitPassenger;
@@ -153,7 +153,7 @@ public class ParamPanel extends JPanel {
 		jlNbShortTrain = new JLabel ("• Nombre max de voyageurs dans un train court :");
 		jlNbLongTrain = new JLabel ("• Nombre max de voyageurs dans un train long :");
 		
-		jlLuckAccident = new JLabel ("• Ratio d'apparition d'incident sur la ligne :");
+		jlIncidentRation = new JLabel ("• Ratio d'apparition d'incident sur la ligne :");
 		jlTimeResolveProblem = new JLabel ("• Temps moyen pour résoudre un problème :");
 		jlTimeSimulation = new JLabel ("• Durée de la simulation (en cycles) :");
 		jlTrainBasicSpeed = new JLabel ("• Vitesse par défault des trains :");
@@ -175,13 +175,13 @@ public class ParamPanel extends JPanel {
 		
 		/********************** SLIDERS *********************************/
 		
-		jsLuckAccident = new JSlider(JSlider.HORIZONTAL, 0, 10, 0);
-		jsLuckAccident.setPaintTicks(true);
-		jsLuckAccident.setPaintLabels(true);
-		jsLuckAccident.setMinorTickSpacing(1);
-		jsLuckAccident.setMajorTickSpacing(2);
-		jsLuckAccident.setBackground(Color.WHITE);
-		jsLuckAccident.setValue(5);
+		jsIncidentRatio = new JSlider(JSlider.HORIZONTAL, 0, 5, 0);
+		jsIncidentRatio.setPaintTicks(true);
+		jsIncidentRatio.setPaintLabels(true);
+		jsIncidentRatio.setMinorTickSpacing(1);
+		jsIncidentRatio.setMajorTickSpacing(1);
+		jsIncidentRatio.setBackground(Color.WHITE);
+		jsIncidentRatio.setValue(2);
 		
 		jsTrainBasicSpeed = new JSlider(JSlider.HORIZONTAL, 0, 10, 0);
 		jsTrainBasicSpeed.setPaintTicks(true);
@@ -225,7 +225,7 @@ public class ParamPanel extends JPanel {
 		gbc.gridx = 0; gbc.gridy = 2;
 		timeParameters.add(jlTrainBasicSpeed, gbc);
 		gbc.gridx = 0; gbc.gridy = 3;
-		timeParameters.add(jlLuckAccident, gbc);
+		timeParameters.add(jlIncidentRation, gbc);
 	
 		gbc.anchor = GridBagConstraints.CENTER;
 		gbc.gridx = 1; gbc.gridy = 0;
@@ -235,7 +235,7 @@ public class ParamPanel extends JPanel {
 		gbc.gridx = 1; gbc.gridy = 2;
 		timeParameters.add(jsTrainBasicSpeed, gbc);
 		gbc.gridx = 1; gbc.gridy = 3;
-		timeParameters.add(jsLuckAccident, gbc);
+		timeParameters.add(jsIncidentRatio, gbc);
 		
 		gbc.insets = new Insets(SPACING, 5*SPACING, SPACING, 5*SPACING);
 		gbc.gridx = 0; gbc.gridy = 0;
@@ -260,7 +260,7 @@ public class ParamPanel extends JPanel {
 		jlNbInitPassenger.setFont(font);
 		jlNbShortTrain.setFont(font);
 		jlNbLongTrain.setFont(font);
-		jlLuckAccident.setFont(font);
+		jlIncidentRation.setFont(font);
 		jlTimeResolveProblem.setFont(font);
 		jlTimeSimulation.setFont(font);
 		jlTrainBasicSpeed.setFont(font);
@@ -291,6 +291,7 @@ public class ParamPanel extends JPanel {
 		Constants.LONG_TRAIN_CAPACITY				= Integer.parseInt(jtfNbLongTrain.getText());
 		Constants.DEFAULT_INCIDENT_RESOLUTION_TIME	= Integer.parseInt(jtfTimetoResolveProblem.getText());
 		Constants.TRAIN_BASIC_SPEED					= jsTrainBasicSpeed.getValue();
+		Constants.INCIDENT_RATIO					= jsIncidentRatio.getValue();
 	}
 	
 	/***********************************************************************************

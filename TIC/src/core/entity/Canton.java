@@ -3,7 +3,7 @@ package core.entity;
 public class Canton {
 
 	//Canton identity
-	private int id;
+	private String id;
 	
 	//Length of the canton on the frame
 	private int length;
@@ -21,7 +21,7 @@ public class Canton {
 	private boolean incident = false;
 
 	
-	public Canton(int id, int startPoint, int length, Station station) {
+	public Canton(String id, int startPoint, int length, Station station) {
 		this.id = id;
 		this.startPoint = startPoint;
 		this.length = length;	
@@ -64,7 +64,7 @@ public class Canton {
 	
 	/*********************************************************/
 
-	public int getId() {
+	public String getId() {
 		return id;
 	}
 	

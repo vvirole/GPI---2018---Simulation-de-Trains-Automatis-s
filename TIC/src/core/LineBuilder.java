@@ -50,7 +50,7 @@ public class LineBuilder {
 		for(Entry<String, Map<String, String>> entry : cantonsData.entrySet()){
 			
 			Map<String, String> cantonInfos = entry.getValue();
-			int idCanton = Integer.parseInt(entry.getKey());
+			String idCanton = entry.getKey();
 			int lengthCanton = Integer.parseInt(cantonInfos.get("length"));
 			
 			// We consider that for each canton, there is one station having the same id

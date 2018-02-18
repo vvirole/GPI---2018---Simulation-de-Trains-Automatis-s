@@ -1,10 +1,10 @@
 package core.entity;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Logger;
 
 import core.TerminusException;
@@ -37,10 +37,10 @@ public class Line {
 	private List<Canton> cantons = new ArrayList<Canton>();
 	
 	//List of trains on the line
-	private List<Train> trains = new ArrayList<Train>();
+	private ConcurrentLinkedQueue<Train> trains = new ConcurrentLinkedQueue<Train>();
 	
 	//List of current incidents on the line
-	private Map<Incident, Integer> incidents = new HashMap<Incident, Integer>();
+	private ConcurrentHashMap<Incident, Integer> incidents = new ConcurrentHashMap<Incident, Integer>();
 
 
 	public Line(String name, int length) {
@@ -111,10 +111,24 @@ public class Line {
 	}
 	
 	/**
+	 * Remove an incident happened on the line
+	 * @param incident the incident which has been resolved
+	 */
+	public void removeIncident(Incident incident) {
+		try {
+			incidents.remove(incident);
+			int location = incident.getLocation();
+			getCantonByPosition(location).setIncident(false);
+		} catch (TerminusException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
 	 * List the incident on the line
 	 * @return
 	 */
-	public Map<Incident, Integer> listIncidents() {
+	public ConcurrentHashMap<Incident, Integer> listIncidents() {
 		return incidents;
 	} 
 	
@@ -136,7 +150,7 @@ public class Line {
 		trains.add(train);
 	}
 	
-	public List<Train> getTrains(){
+	public ConcurrentLinkedQueue<Train> getTrains(){
 		return trains;
 	}
 	

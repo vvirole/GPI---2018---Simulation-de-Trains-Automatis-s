@@ -1,8 +1,5 @@
 package core.entity;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import core.Constants;
 import core.TerminusException;
 import core.utility.RandomUtility;
@@ -20,9 +17,6 @@ public class Station {
 	
 	//Number of current passenger
 	private int currentPassenger;
-	
-	//Contains the stations and the number of passengers which want to go on
-	private Map<Station,Integer> destinations = new HashMap<Station,Integer>();
 	
 	//Satisfaction of the passenger in the Station initialised at 75 (value beetwen 0 and 100)
 	private int satisfaction = 75;
@@ -48,10 +42,17 @@ public class Station {
 		if (arrivalTrain == null){
 			arrivalTrain = train;
 			arrivalTrain.setCurrentPosition(position);
-			try {
+			
+			try {	
 				// Pause for taking passengers of the station
 				Thread.sleep(getPauseDuration());
+				
+				// New passengers
+				int nbNewPassengers = RandomUtility.rand(0, currentPassenger);
+				currentPassenger -= nbNewPassengers;
+				currentPassenger += train.addPassengers(nbNewPassengers);
 				train.removeDestination(this);
+				
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -144,13 +145,4 @@ public class Station {
 	public void setTrain(Train arrivalTrain) {
 		this.arrivalTrain = arrivalTrain;
 	}
-
-	public Map<Station, Integer> getDestinations() {
-		return destinations;
-	}
-
-	public void setDestinations(Map<Station, Integer> destinations) {
-		this.destinations = destinations;
-	}	
-	
 }

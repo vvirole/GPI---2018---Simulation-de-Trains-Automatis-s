@@ -104,11 +104,22 @@ public class Train extends Thread {
 	
 	/**
 	 * Action specified that somes passengers enters on this train
-	 * @param nbPassengers the number of passenger that can enter on the train
+	 * @param nbPassengers the number of passenger that wish enter on the train
+	 * @return the number of passengers that can't enter on this train
 	 */
-	public void addPassengers(int nbPassengers){
-		int remaining = nbPassengers;
-		for (int i = 0 ; i < nbPassengers ; i++){
+	public int addPassengers(int nbPassengers){
+		
+		int remainingPlace = maxPassengers - currentPassenger; // Number of remaining places
+		int sadPassenger = 0; // Number of passengers that can't enter
+		int newPassenger = 0; // Number of passenger that can enter
+		
+		if (nbPassengers > remainingPlace){
+			sadPassenger = nbPassengers - remainingPlace;
+			newPassenger = nbPassengers - sadPassenger;
+		}
+		
+		int remaining = newPassenger;
+		for (int i = 0 ; i < newPassenger ; i++){
 			for (Entry<Station, Integer> entry : destinations.entrySet()){
 				Station dest = entry.getKey();
 				Integer number = entry.getValue();
@@ -121,6 +132,11 @@ public class Train extends Thread {
 				remaining -= rand;
 			}
 		}
+		
+		// We add the new passengers on the train and return the number of passengers
+		// that can't enter on this
+		currentPassenger += newPassenger;
+		return sadPassenger;
 	}
 	
 	/**

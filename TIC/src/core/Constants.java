@@ -24,7 +24,7 @@ public class Constants {
 	public static int DEFAULT_INCIDENT_RESOLUTION_TIME = 200;
 	
 	// Probability that an incident happens on the line
-	public static final int INCIDENT_RATIO = 2;
+	public static int INCIDENT_RATIO = 2;
 	
 	// Time of critique sections
 	public static final int TIME_UNIT = 50;

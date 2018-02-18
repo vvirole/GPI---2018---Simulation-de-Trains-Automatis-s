@@ -5,8 +5,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
@@ -25,7 +23,6 @@ import javax.swing.JPanel;
 import core.LineController;
 import core.entity.Line;
 import gui.GUIConstants;
-import gui.LinePrinter;
 
 /**
  * Simulation panel
@@ -85,20 +82,7 @@ public class SimulationPanel extends JPanel implements Observer {
 		userPanel.setBackground(Color.DARK_GRAY);
 		userPanel.setPreferredSize(new Dimension(GUIConstants.WINDOW_WIDTH, 150));
 		
-		dashboardPanel = new JPanel(){
-			private static final long serialVersionUID = 1L;
-			/**
-			 * Draw the line and the trains
-			 * @param g
-			 */
-			@Override
-			public void paintComponent(Graphics g) {
-				Graphics2D g2 = (Graphics2D) g;
-				g2.setFont(new Font("Dialog", Font.PLAIN, 15));
-				LinePrinter.printLine(line, g2);
-				LinePrinter.printTrains(line.getTrains(), g2);
-			}
-		};
+		dashboardPanel = new SimulationDashboard();
 		dashboardPanel.setPreferredSize(new Dimension(GUIConstants.LINE_LENGTH, 400));
 		
 		/***************** LABELS *****************/
@@ -184,7 +168,7 @@ public class SimulationPanel extends JPanel implements Observer {
 	@Override
 	public void update(Observable observable, Object object) {
 		jlTurn.setText("Cycle : " + ((LineController) observable).getTime());
-		repaint();	
+		dashboardPanel.repaint();	
 	}
 	
 	

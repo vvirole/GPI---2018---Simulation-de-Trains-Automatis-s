@@ -9,6 +9,7 @@ import core.entity.Canton;
 import core.entity.Incident;
 import core.entity.Line;
 import core.entity.Train;
+import core.utility.RandomUtility;
 import gui.GUIConstants;
 
 /**
@@ -49,6 +50,16 @@ public class LineController extends Observable implements Runnable {
 					newTrain.start();
 				}
 			}	
+			
+			int i = RandomUtility.rand(0, line.getNbCanton() - 1);
+			Canton canton = line.getCanton(i);
+			if (!canton.hasIncident() && RandomUtility.rand(0, 100) <= Constants.INCIDENT_RATIO){
+				line.newIncident(canton, Incident.INFRASTRUCTURE_INCIDENT);
+			}
+			
+			if (line.hasIncident()){
+				resolveIncident();
+			}
 			
 			// Notify the simulation panel that there is a change (repaint needed)
 			setChanged();
@@ -92,7 +103,7 @@ public class LineController extends Observable implements Runnable {
 			Integer remainingTime = entry.getValue();
 			incidents.put(incident, --remainingTime);
 			if (remainingTime == 0){
-				incidents.remove(incident);
+				line.removeIncident(incident);
 			}
 		}
 	}
