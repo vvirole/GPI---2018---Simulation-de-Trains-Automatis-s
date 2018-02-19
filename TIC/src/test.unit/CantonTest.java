@@ -2,31 +2,58 @@ package test.unit;
 
 import static org.junit.Assert.*;
 
+import java.io.File;
+
+import org.junit.Before;
 import org.junit.Test;
 
-import core.entity.Canton;
-import core.entity.Line;
-import core.entity.Station;
-import core.entity.Train;
+import core.*;
+import core.entity.*;
+import core.xml.UnvalidFileException;
+
 
 public class CantonTest {
+	
+	
+	private Line line;
+	private Canton canton, canton2;
 
-	Line line = new Line(null, 0, 0);
-	Station station = new Station(null, 0, 0, 0, 0);
-	Canton canton = new Canton(0, 0, 0, station);
-	Train train = new Train(canton, 0, 0, 0);
+
 	
+	@Before
+	public void linePreparation() throws UnvalidFileException{
+		File file = new File("line.xml");
+		LineBuilder.buildLine(file);
+		line = Line.getInstance();
+		canton = line.getCanton(0);
+		canton2 = line.getCanton(1);
+		
 	
-	/** test si le canton n'est pas libre**/
-	@Test
-	public void testIsFree() {
-		assertTrue(canton.isFree()==false);
 	}
 
-	/** test si le canton ne subit pas d'accident **/
+	/** vérification qu'un canton n'est plus libre si un train est dedans**/
 	@Test
-	public void testIsNotAccident() {
-		assertTrue(canton.isAccident()==false);
+	public void testEnter() {
+		Train train = new Train(canton, 0, 0, 0);
+		canton2.enter(train);
+		assertFalse(canton2.isFree());
+	}
+	
+	/** vérification qu'un canton redevient libre si le train qui l'occupé s'en va**/
+	@Test
+	public void testExit() {
+		Train train = new Train(canton, 0, 0, 0);
+		canton2.enter(train);
+		canton2.exit();
+		assertTrue(canton2.isFree());
+	}
+
+	/** vérification qu'en cas d'accident, le canton en prend bien compte**/
+	@Test
+	public void testHasIncident() {
+		boolean incident = true;
+		canton.setIncident(incident);
+		assertTrue(canton.hasIncident());
 	}
 
 
