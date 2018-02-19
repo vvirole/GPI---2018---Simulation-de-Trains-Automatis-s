@@ -33,12 +33,30 @@ public class LineTest implements Observer{
 		canton2 = line.getCanton(1);
 	}
 	
-	/** vérification qu'en cas d'accident d'infrastructure sur la ligne, celle-ci s'en rends bien compte**/
+	/** vérification qu'en cas d'accident d'infrastructure sur la ligne en periode normale, celle-ci s'en rends bien compte**/
 	@Test
-	public void testHasIncidentInfrastructure() {
+	public void testHasIncidentInfrastructurePeriodeNormal() {
 		line.newIncident(canton, 0);
+		line.setPeriod("normale");
 		assertTrue(line.hasIncident());	
 	}
+	
+	/** vérification qu'en cas d'accident d'infrastructure sur la ligne en periode normale, celle-ci s'en rends bien compte**/
+	@Test
+	public void testHasIncidentInfrastructurePeriodeVoid() {
+		line.newIncident(canton, 0);
+		line.setPeriod("creuse");
+		assertTrue(line.hasIncident());	
+	}
+	
+	/** vérification qu'en cas d'accident d'infrastructure sur la ligne en periode normale, celle-ci s'en rends bien compte**/
+	@Test
+	public void testHasIncidentInfrastructurePeriodeFull() {
+		line.newIncident(canton, 0);
+		line.setPeriod("pleine");
+		assertTrue(line.hasIncident());	
+	}
+	
 	
 	/** vérification qu'en cas d'accident de passager sur la ligne, celle-ci s'en rends bien compte**/
 	@Test
