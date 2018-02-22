@@ -1,7 +1,5 @@
 package core;
 
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -25,21 +23,28 @@ public class LineController extends Observable implements Runnable {
 	// The line instance
 	private Line line = Line.getInstance();
 	
-	// Counter of the simulation
+	// Max duration of the simulation
+	private int duration = GUIConstants.MAX_DURATION;
+	
+	// Current cycle of the simulation
 	private int time = 0;
+	
+	public LineController(int duration) {
+		this.duration = duration;
+	}
 	
 	public LineController(Observer observer){
 		addObserver(observer);
 	}
-	
+
 	@Override
 	public void run() {
 		
 		// We start the running of the line
 		line.setWorking(true);
 		runTrains();
-		
-		while(line.isWorking() && time <= GUIConstants.MAX_DURATION){
+	
+		while(line.isWorking() && time <= duration){
 			if (time % Constants.ARRIVAL_TRAIN_UNIT == 0){
 				Canton startCanton = line.getCantons().get(0);
 				if (startCanton.isFree() && !startCanton.hasIncident()){
@@ -53,18 +58,17 @@ public class LineController extends Observable implements Runnable {
 			
 			int i = RandomUtility.rand(0, line.getNbCanton() - 1);
 			Canton canton = line.getCanton(i);
-			if (!canton.hasIncident() && RandomUtility.rand(0, 100) < Constants.INCIDENT_RATIO){
+			if (!canton.hasIncident() && RandomUtility.rand(0, 500) < Constants.INCIDENT_RATIO){
 				line.newIncident(canton, Incident.INFRASTRUCTURE_INCIDENT);
 			}
 			
 			if (line.hasIncident()){
-				resolveIncident();
+				line.resolveIncident();
 			}
 			
 			// Notify the simulation panel that there is a change (repaint needed)
 			setChanged();
 			notifyObservers(); 
-			clearChanged();
 
 			try {
 				Thread.sleep(Constants.TIME_UNIT);
@@ -92,22 +96,6 @@ public class LineController extends Observable implements Runnable {
 	public void runTrains(){
 		line.getTrains().forEach(train -> train.setRunning(true));
 	}
-	
-	/**
-	 * Run the resolution procedure to resolve the incidents on the line
-	 */
-	public void resolveIncident(){
-		Map<Incident, Integer> incidents = line.listIncidents();
-		for (Entry<Incident, Integer> entry : incidents.entrySet()){
-			Incident incident = entry.getKey();
-			Integer remainingTime = entry.getValue();
-			incidents.put(incident, --remainingTime);
-			if (remainingTime == 0){
-				line.removeIncident(incident);
-			}
-		}
-	}
-
 	
 	/*********************************************************************/
 	

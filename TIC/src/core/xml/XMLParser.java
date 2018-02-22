@@ -63,7 +63,7 @@ public class XMLParser {
 	
 	/**
 	 * Get the datas of a list of same nodes (same names)
-	 * wich contains only text node
+	 * which contains only text node
 	 * @param tagname the name of the node
 	 * @return a map collection of datas
 	 */

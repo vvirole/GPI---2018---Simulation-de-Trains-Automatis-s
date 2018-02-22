@@ -25,14 +25,13 @@ public class RandomUtility {
 	
 	/**
 	 * Generate the new destinations of the new passengers of the train
-	 * @param val the number of new passengers
+	 * @param nbPassenger the number of new passengers
 	 * @param destinations a map of destinations
-	 * @return a table of values
 	 */
-	public static Map<Station, Integer> generateDest(int val, Map<Station, Integer> destinations) {
+	public static Map<Station, Integer> generateDest(int nbPassenger, Map<Station, Integer> destinations) {
 		
-		if (destinations.size() > 1){			
-			int remaining = val;
+		if (destinations.size() > 0){			
+			int remaining = nbPassenger;
 			
 			// We create a specific map (station => crowdLevel)
 			Map<Station, Integer> drawMap = new HashMap<Station, Integer>();

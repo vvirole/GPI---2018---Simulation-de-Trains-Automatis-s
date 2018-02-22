@@ -15,10 +15,10 @@ public class Constants {
 	public static int TRAIN_BASIC_SPEED = 5;
 	
 	// Numbers of persons that a short train can welcome
-	public static int SHORT_TRAIN_CAPACITY = 50;
+	public static int SHORT_TRAIN_CAPACITY = 100;
 	
 	// Numbers of persons that a long train can welcome
-	public static int LONG_TRAIN_CAPACITY = 100;
+	public static int LONG_TRAIN_CAPACITY = 200;
 	
 	// Default time to resolve an incident on the line (number of cycles)
 	public static int DEFAULT_INCIDENT_RESOLUTION_TIME = 200;

@@ -36,6 +36,6 @@ public class GUIConstants {
 	
 	// -------------------------------------------------------------- //
 	
-	public static int MAX_DURATION = 10000;
+	public static int MAX_DURATION = 1000;
 		
 }

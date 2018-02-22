@@ -44,6 +44,15 @@ public class Incident {
 						return Constants.DEFAULT_INCIDENT_RESOLUTION_TIME;
 		}
 	}
+	
+	/**
+	 * Indicate if the incident is located before the position of train
+	 * @param train
+	 * @return true if the incident is located before, else false
+	 */
+	public boolean isLocatedBefore(Train train){
+		return (location < train.getCurrentPosition());
+	}
 
 	public int getLocation() {
 		return location;

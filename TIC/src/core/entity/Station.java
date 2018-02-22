@@ -53,15 +53,23 @@ public class Station {
 				// Pause for taking passengers of the station
 				Thread.sleep(getPauseDuration());
 				
+				System.out.println("\n================== " + arrivalTrain.getName() + " arrived at " + name + " ==================\n");
+				
 				// Passengers getting off the train are now into the station
 				currentPassenger += arrivalTrain.getOffPassengers(this);
 				arrivalTrain.removeDestination(this);
 				
 				// New passengers on the train
 				int nbDest = arrivalTrain.getDestination().size();
-				int nbNewPassengers = RandomUtility.rand(0, currentPassenger/(nbDest + 1));
-				currentPassenger -= nbNewPassengers;
-				currentPassenger += arrivalTrain.addPassengers(nbNewPassengers);
+				int nbNewPassengers = 0;
+				if (nbDest > 0){
+					nbNewPassengers = RandomUtility.rand(0, currentPassenger/nbDest);
+					currentPassenger -= nbNewPassengers;
+					currentPassenger += arrivalTrain.addPassengers(nbNewPassengers);
+				}
+				
+				System.out.println(arrivalTrain);
+				System.out.println("===================================================================\n");
 				
 			} catch (InterruptedException e) {
 				e.printStackTrace();

@@ -84,24 +84,26 @@ public class Train extends Thread {
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-				if (!currentCanton.hasIncident()){
-					if (currentPosition + speed >= currentCanton.getEndPoint()) {
-						try {
-							Station station = currentCanton.getStation();
-							station.enter(this);
-						} catch (TerminusException e) {
-							arrived = true;
-							running = false;
-							line.getTrains().remove(this);
-						}
+				if (currentCanton.hasIncident()){
+					Incident incident = line.getIncident(currentCanton);
+					if (!incident.isLocatedBefore(this)) break;
+				}
+				if (currentPosition + speed >= currentCanton.getEndPoint()) {
+					try {
+						Station station = currentCanton.getStation();
+						station.enter(this);
+					} catch (TerminusException e) {
+						arrived = true;
+						running = false;
+						line.getTrains().remove(this);
 					} 
-					else {
-						updatePosition();
-					}
+				}
+				else {
+					updatePosition();
 				}
 			}
 		}
-		System.out.println(this.getName() + " est arrivé au terminus avec " + currentPassenger + " passagers");
+		System.out.println("-> " + this.getName() + " arrived at the terminus " + currentCanton);
 		currentCanton.exit();
 	}
 	
@@ -130,15 +132,10 @@ public class Train extends Thread {
 		// We generate the destination of these new passengers
 		destinations = RandomUtility.generateDest(newPassenger, destinations);
 		
-		System.out.println(newPassenger + " sont montés dans " + this.getName() + " à " + currentCanton.getStation().getName());
-		for (Entry<Station, Integer> entry : destinations.entrySet()){
-			System.out.println(entry.getKey().getName() + " => " + entry.getValue());
-		}
-		System.out.println("\n");
-		
 		// We add the new passengers on the train and return the number of passengers
 		// that can't enter on this
 		currentPassenger += newPassenger;
+		System.out.println("-> " + newPassenger + " passengers got on.");
 		return sadPassenger;
 	}
 	
@@ -150,7 +147,7 @@ public class Train extends Thread {
 		int nbPassengers = destinations.get(station);
 		destinations.remove(station);
 		currentPassenger -= nbPassengers;
-		System.out.println(nbPassengers + " sont descendus de " + this.getName() + " à " + station.getName());
+		System.out.println("-> " + nbPassengers + " passengers got off.");
 		return nbPassengers;
 	}
 	
@@ -228,6 +225,28 @@ public class Train extends Thread {
 	
 	public void setDestinations(Map<Station, Integer> destination) {
 		this.destinations = destination;
+	}
+	
+	@Override
+	public String toString(){
+		
+		String type = "";
+		switch(this.type){
+			case SHORT_TYPE 	: type = "Short"; break;
+			case LONG_TYPE  	: type = "Long"; break;
+			case RESERVE_TYPE 	: type = "Reserve"; break;
+			default : type = "Undefined";
+		}
+		
+		String s = 	"- Type : " + type + "\n"
+					+ "- Number of passengers : " + currentPassenger + "/" + maxPassengers + "\n" 
+					+ "- Destinations :\n";	
+		
+		for (Entry<Station, Integer> entry : destinations.entrySet()){
+			s += "[" + entry.getValue() + " => " + entry.getKey().getName() + "]\n";
+		}
+		
+		return s; 					
 	}
 		
 }
