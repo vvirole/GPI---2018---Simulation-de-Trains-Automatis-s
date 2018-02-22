@@ -103,7 +103,7 @@ public class Train extends Thread {
 				}
 			}
 		}
-		System.out.println("-> " + this.getName() + " arrived at the terminus " + currentCanton.getStation().getName());
+		System.out.println("-> " + getName() + " arrived at the terminus " + currentCanton.getStation().getName());
 		currentCanton.exit();
 	}
 	
