@@ -14,6 +14,7 @@ import gui.panel.MenuPanel;
 import gui.panel.Panels;
 import gui.panel.ParamPanel;
 import gui.panel.SimulationPanel;
+import gui.panel.StatPanel;
 
 /**
  * Graphic frame using for the simulation
@@ -27,6 +28,8 @@ import gui.panel.SimulationPanel;
  */
 public class GUIFrame extends JFrame {
 	
+	private static final String VERSION = "2.0";
+	
 	private static final long serialVersionUID = 8353688867398342579L;	
 	private static CardLayout cardLayout = new CardLayout();
 	private static JPanel contentPane = new JPanel();	
@@ -35,7 +38,7 @@ public class GUIFrame extends JFrame {
 	 * Default constructor
 	 */
 	public GUIFrame(){
-		super("Trains Is Coming");
+		super("Trains Is Coming - " + VERSION);
 		setSize(GUIConstants.WINDOW_WIDTH, GUIConstants.WINDOW_HEIGHT);
 		setLocationRelativeTo(null); // Set the frame at the center of window
 		setResizable(false);
@@ -77,6 +80,10 @@ public class GUIFrame extends JFrame {
 		if (panel.equals(Panels.SIMULATION)){
 			SimulationPanel simulation = new SimulationPanel();
 			contentPane.add(simulation, Panels.SIMULATION);
+		}
+		if (panel.equals(Panels.STATISTICS)){
+			StatPanel stat = new StatPanel();
+			contentPane.add(stat, Panels.STATISTICS);
 		}
 		cardLayout.show(contentPane, panel);
 	}	

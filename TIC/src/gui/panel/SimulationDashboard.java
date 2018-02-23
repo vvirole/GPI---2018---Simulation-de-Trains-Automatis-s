@@ -1,48 +1,53 @@
 package gui.panel;
 
-import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.util.ArrayList;
-import java.util.List;
 
+import javax.swing.BorderFactory;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import core.Constants;
-import core.entity.Canton;
 import core.entity.Line;
-import core.entity.Train;
-import gui.GUIConstants;
 import gui.LinePrinter;
 
-public class SimulationDashboard extends JPanel implements Runnable {
+public class SimulationDashboard extends JPanel {
 
-	private static final long serialVersionUID = -6106553604954976038L;
+	private static final long serialVersionUID = 1881603318378368505L;
 	
-	// Current cycle of the simulation
-	private int time = 0;
+	// The instance of the line
+	private Line line = Line.getInstance();
 	
-	@Override
-	public void run() {
-		while(time <= GUIConstants.MAX_DURATION){
-			if (time % 12 == 0){
-				Line line = Line.getInstance();
-				Canton startCanton = line.getCantons().get(0);
-				if (startCanton.isFree()){
-					Train newTrain = new Train(startCanton, 50, null, Constants.TRAIN_BASIC_SPEED, Train.SHORT_TYPE);
-					line.addTrain(newTrain);
-					newTrain.start();
-				}
-			}
-			repaint();
-			try {
-				Thread.sleep(GUIConstants.TIME_UNIT);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			time++;
-		}
+	// Display the current period of the simulation
+	private JLabel jlPeriod;
+	
+	private static final int MARGIN = 50;
+	
+	
+	public SimulationDashboard(){
+		setLayout(null);
+		init();
+	}
+	
+	private void init(){
+		// Initiate the label
+		jlPeriod = new JLabel("Période : " + line.getPeriod());
+		jlPeriod.setForeground(Color.DARK_GRAY);
+		jlPeriod.setHorizontalAlignment(JLabel.CENTER);
+		jlPeriod.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 2));
+		jlPeriod.setLocation(850,20);
+		
+		// Font for the label
+		Font font = new Font(Font.DIALOG, Font.BOLD, 20);
+		jlPeriod.setFont(font);
+				
+		FontMetrics mPeriod = getFontMetrics(jlPeriod.getFont());
+		int wPeriod = mPeriod.stringWidth(jlPeriod.getText()) + 2 * MARGIN;
+		jlPeriod.setSize(new Dimension(wPeriod, 50));	
+		add(jlPeriod);
 	}
 	
 	/**
@@ -50,18 +55,12 @@ public class SimulationDashboard extends JPanel implements Runnable {
 	 * @param g
 	 */
 	@Override
-	protected void paintComponent(Graphics g) {
+	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D) g;
-		g2.setFont(new Font("Dialog", Font.PLAIN, 15));
-		g2.setStroke(new BasicStroke(5));
-		Line line = Line.getInstance();
+		jlPeriod.updateUI(); // A VERIFIER => DOIT MODIFIER LA PERIODE
 		LinePrinter.printLine(line, g2);
 		LinePrinter.printTrains(line.getTrains(), g2);
-	}
-	
-	public int getTime(){
-		return time;
 	}
 
 }

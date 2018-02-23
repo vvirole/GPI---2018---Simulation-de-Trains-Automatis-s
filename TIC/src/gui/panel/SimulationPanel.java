@@ -4,18 +4,23 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Observable;
+import java.util.Observer;
 
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import core.LineController;
 import core.entity.Line;
 import gui.GUIConstants;
 
@@ -29,11 +34,15 @@ import gui.GUIConstants;
  * @author Vincent Virole
  *
  */
-public class SimulationPanel extends JPanel {
+public class SimulationPanel extends JPanel implements Observer {
 
 	private static final long serialVersionUID = 1722047581362200550L;
 	
+	private static final int MARGIN = 80;
+	
 	private JPanel userPanel;
+	private JPanel dashboardPanel;
+	
 	private JLabel jlTitle;
 	private JLabel jlTurn;
 	
@@ -45,14 +54,14 @@ public class SimulationPanel extends JPanel {
 	private ImageIcon imageBack;
 	private ImageIcon imageStop;
 	
-	// Sub panel that displays the line
-	private SimulationDashboard dashboard;
+	// The instance of the line
+	private Line line = Line.getInstance();
+		
+	// The controller
+	private LineController controller = new LineController(this);
 	
 	// Thread of simulation
 	private Thread simulationThread;
-	
-	// If the simulation is running
-	private boolean run = false;
 
 	
 	public SimulationPanel(){
@@ -73,16 +82,28 @@ public class SimulationPanel extends JPanel {
 		userPanel.setBackground(Color.DARK_GRAY);
 		userPanel.setPreferredSize(new Dimension(GUIConstants.WINDOW_WIDTH, 150));
 		
-		dashboard = new SimulationDashboard();
-		dashboard.setPreferredSize(new Dimension(GUIConstants.LINE_LENGTH, 400));
-		simulationThread = new Thread(dashboard);
+		dashboardPanel = new SimulationDashboard();
+		dashboardPanel.setPreferredSize(new Dimension(GUIConstants.LINE_LENGTH, 400));
 		
 		/***************** LABELS *****************/
 		
 		jlTitle = new JLabel(Line.getInstance().getName());
-		jlTurn = new JLabel("Cycle : " + dashboard.getTime());
 		jlTitle.setForeground(Color.WHITE);
+		jlTitle.setHorizontalAlignment(JLabel.CENTER);
+		jlTitle.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2));
+		
+		jlTurn = new JLabel("Cycle : 0");
 		jlTurn.setForeground(Color.WHITE);
+		jlTurn.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2));
+		jlTurn.setHorizontalAlignment(JLabel.CENTER);
+		
+		FontMetrics mTitle = getFontMetrics(jlTitle.getFont());
+		int wTitle = mTitle.stringWidth(jlTitle.getText()) + 2 * MARGIN;
+		jlTitle.setPreferredSize(new Dimension(wTitle, 50));
+		
+		FontMetrics mTurn = getFontMetrics(jlTurn.getFont());
+		int wTurn = mTurn.stringWidth(jlTurn.getText()) + 2 * MARGIN;
+		jlTurn.setPreferredSize(new Dimension(wTurn, 50));
 		
 		/******************* BUTTONS ********************/
 		
@@ -120,7 +141,7 @@ public class SimulationPanel extends JPanel {
 		
 		/**************** ADD **********************/
 		
-		add(dashboard, BorderLayout.NORTH);
+		add(dashboardPanel, BorderLayout.NORTH);
 		add(userPanel, BorderLayout.SOUTH);
 	}
 	
@@ -133,11 +154,21 @@ public class SimulationPanel extends JPanel {
 		Font infoFont = new Font(Font.DIALOG, Font.BOLD, 20);
 		
 		jlTitle.setFont(titleFont);
-		jlTurn.setFont(infoFont);
-		
+		jlTurn.setFont(infoFont);	
 		jbStart.setFont(btnFont);
 		jbPause.setFont(btnFont);
 		jbStop.setFont(btnFont);
+	}
+	
+	/**
+	 * Update the render of this panel when he receives a notification
+	 * @param obervable 
+	 * @param object
+	 */
+	@Override
+	public void update(Observable observable, Object object) {
+		jlTurn.setText("Cycle : " + ((LineController) observable).getTime());
+		dashboardPanel.repaint();	
 	}
 	
 	
@@ -150,7 +181,8 @@ public class SimulationPanel extends JPanel {
 	 */
 	public class ActionStart implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			if (!run){
+			if (!line.isWorking()){
+				simulationThread = new Thread(controller);
 				simulationThread.start();
 			}
 		}
@@ -162,7 +194,7 @@ public class SimulationPanel extends JPanel {
 	public class ActionPause implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			run = false;
+			line.setWorking(false);
 		}
 	}
 		
@@ -172,7 +204,8 @@ public class SimulationPanel extends JPanel {
 	public class ActionStop implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			run = false;
+			line.setWorking(false);
+			gui.GUIFrame.setCurrentPanel(Panels.STATISTICS);
 		}
 	}
 

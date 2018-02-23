@@ -47,13 +47,10 @@ public class LineBuilder {
 		// The length of the line
 		int usedLength = 0;
 		
-		// We get the numbers of cantons
-		int numCantons = parser.getCount("cantons");
-		
 		for(Entry<String, Map<String, String>> entry : cantonsData.entrySet()){
 			
 			Map<String, String> cantonInfos = entry.getValue();
-			int idCanton = Integer.parseInt(entry.getKey());
+			String idCanton = entry.getKey();
 			int lengthCanton = Integer.parseInt(cantonInfos.get("length"));
 			
 			// We consider that for each canton, there is one station having the same id
@@ -75,16 +72,42 @@ public class LineBuilder {
 			usedLength += lengthCanton;
 		}
 		
-		// Adjustment of the line according to the constants LINE_LENGTH
-		double adjust = (double) GUIConstants.LINE_LENGTH / (double) usedLength;
-		for (Canton canton : cantonList){
-			canton.setLength((int) Math.ceil((double) canton.getLength() * adjust));
-		}
-		
 		// We create the line and add the cantons
 		String nameLine = parser.getTextNode("nameLine");
-		Line line = new Line(nameLine, GUIConstants.LINE_LENGTH, numCantons);
+		Line line = new Line(nameLine, usedLength);
 		cantonList.forEach(canton -> line.addCanton(canton));
-		Line.setInstance(line);
+		
+		// Adjustment of the line according to the constants LINE_LENGTH defined in Constants.java
+		double adjust = (double) GUIConstants.LINE_LENGTH / (double) usedLength;
+		Line.setInstance(adjustLines(line, adjust));
+	}
+	
+	/**
+	 * Adjust the dimensions of line
+	 * @param line
+	 * @param delta
+	 * @return the resized line
+	 */
+	public static Line adjustLines(Line line, double delta){	
+		int usedLength = 0;
+		
+		for (Canton canton : line.getCantons()){	
+			int newLength = (int) Math.ceil((double) canton.getLength() * delta);	
+			int newPosition = usedLength + newLength;		
+			Station oldStation = canton.getStation();
+			Station adjustStation = new Station(oldStation.getName(), 
+											newPosition,
+											oldStation.getMaxPassengers(),
+											oldStation.getNumReserveTrain(),
+											oldStation.getCrowdLevel()
+									);
+			canton.setLength(newLength);
+			canton.setStartPoint(usedLength);
+			canton.setStation(adjustStation);		
+			usedLength += newLength;
+		}
+		
+		line.setLength(usedLength);
+		return line;
 	}
 }
