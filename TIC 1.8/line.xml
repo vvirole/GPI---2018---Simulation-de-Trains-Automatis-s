@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+
+<line>
+
+    <nameLine>Ligne A</nameLine>
+
+    <stations>
+
+        <station id="0">
+            <nameStation>Nanterre</nameStation>
+            <crowdLevel>50</crowdLevel>
+            <maxPassengers>500</maxPassengers>
+            <reserveTrain>2</reserveTrain>
+        </station>
+
+        <station id="1">
+            <nameStation>La Défense</nameStation>
+            <crowdLevel>75</crowdLevel>
+            <maxPassengers>800</maxPassengers>
+            <reserveTrain>3</reserveTrain>
+        </station>
+
+        <station id="2">
+            <nameStation>Auber</nameStation>
+            <crowdLevel>60</crowdLevel>
+            <maxPassengers>650</maxPassengers>
+            <reserveTrain>3</reserveTrain>
+        </station>
+
+        <station id="3">
+            <nameStation>Gare de Lyon</nameStation>
+            <crowdLevel>40</crowdLevel>
+            <maxPassengers>350</maxPassengers>
+            <reserveTrain>2</reserveTrain>
+        </station>
+
+        <station id="4">
+            <nameStation>Nation</nameStation>
+            <crowdLevel>30</crowdLevel>
+            <maxPassengers>250</maxPassengers>
+            <reserveTrain>2</reserveTrain>
+        </station>
+
+        <station id="5">
+            <nameStation>Vincennes</nameStation>
+            <crowdLevel>50</crowdLevel>
+            <maxPassengers>300</maxPassengers>
+            <reserveTrain>2</reserveTrain>
+        </station>
+
+    </stations>
+
+    <cantons>
+        <canton id="0">
+            <length>150</length>
+        </canton>
+
+        <canton id="1">
+            <length>100</length>
+        </canton>
+
+        <canton id="2">
+            <length>150</length>
+        </canton>
+
+        <canton id="3">
+            <length>180</length>
+        </canton>
+
+        <canton id="4">
+            <length>100</length>
+        </canton>
+
+        <canton id="5">
+            <length>150</length>
+        </canton>
+    </cantons>
+
+</line>
