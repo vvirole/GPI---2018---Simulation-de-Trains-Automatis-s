@@ -14,18 +14,23 @@ import core.LineController;
 import core.entity.Canton;
 import core.entity.Incident;
 import core.entity.Line;
+import core.entity.Station;
 import core.entity.Train;
 import core.xml.UnvalidFileException;
+import gui.GUIConstants;
 
+/**
+ * @author RE Thomas
+ */
 
-public class LineTest implements Observer{
+public class LineTest{
 	
 	private Line line;
 	private Canton canton, canton2;
 	Canton canton3 = new Canton(null, 0, 0, null); 
 
 	@Before
-	public void linePreparation() throws UnvalidFileException{
+	public void linePreparation() throws UnvalidFileException {
 		File file = new File("line.xml");
 		LineBuilder.buildLine(file);
 		line = Line.getInstance();
@@ -33,87 +38,98 @@ public class LineTest implements Observer{
 		canton2 = line.getCanton(1);
 	}
 	
-	/** vérification qu'en cas d'accident d'infrastructure sur la ligne en periode normale, celle-ci s'en rends bien compte**/
+	/**
+	 *  Vérification qu'en cas d'accident d'infrastructure sur la ligne en periode normale, celle-ci s'en rends bien compte
+	 */
 	@Test
 	public void testHasIncidentInfrastructurePeriodeNormal() {
-		line.newIncident(canton, 0);
+		line.newIncident(canton, Incident.INFRASTRUCTURE_INCIDENT);
 		line.setPeriod("normale");
 		assertTrue(line.hasIncident());	
 	}
 	
-	/** vérification qu'en cas d'accident d'infrastructure sur la ligne en periode normale, celle-ci s'en rends bien compte**/
+	/**
+	 *  Vérification qu'en cas d'accident d'infrastructure sur la ligne en periode normale, celle-ci s'en rends bien compte
+	 */
 	@Test
 	public void testHasIncidentInfrastructurePeriodeVoid() {
-		line.newIncident(canton, 0);
+		line.newIncident(canton, Incident.INFRASTRUCTURE_INCIDENT);
 		line.setPeriod("creuse");
 		assertTrue(line.hasIncident());	
 	}
 	
-	/** vérification qu'en cas d'accident d'infrastructure sur la ligne en periode normale, celle-ci s'en rends bien compte**/
+	/**
+	 *  Vérification qu'en cas d'accident d'infrastructure sur la ligne en periode normale, celle-ci s'en rends bien compte
+	 */
 	@Test
 	public void testHasIncidentInfrastructurePeriodeFull() {
-		line.newIncident(canton, 0);
+		line.newIncident(canton, Incident.INFRASTRUCTURE_INCIDENT);
 		line.setPeriod("pleine");
 		assertTrue(line.hasIncident());	
 	}
 	
 	
-	/** vérification qu'en cas d'accident de passager sur la ligne, celle-ci s'en rends bien compte**/
+	/**
+	 * Vérification qu'en cas d'accident de passager sur la ligne, celle-ci s'en rends bien compte**/
 	@Test
 	public void testHasIncidentPassager() {
-		line.newIncident(canton, 1);
+		line.newIncident(canton, Incident.PASSENGER_INCIDENT);
 		assertTrue(line.hasIncident());	
 	}
 
-	/** vérification qu'en cas d'accident sur un canton donné, la ligne est capable d'identifier lequel**/
+	/**
+	 * Vérification qu'en cas d'accident sur un canton donné, la ligne est capable d'identifier lequel
+	 */
 	@Test
 	public void testHasIncidentCanton() {
-		line.newIncident(canton, 1);
+		line.newIncident(canton, Incident.INFRASTRUCTURE_INCIDENT);
 		assertTrue(line.hasIncident(canton));
 		assertFalse(line.hasIncident(canton2));
 	}
-	
-	/**@Test
-	public void testRemoveIncident() {
-		line.newIncident(canton, 0);
 		
-		line.removeIncident(incident);
-	}**/
-
-	/**@Test
-	public void testListIncidents() {
-		fail("Not yet implemented");
-	}**/
-
-	
-	/** vérification qu'en cas de rajout de train sur la ligne, celui-ci est bien sur la ligne**/
+	/**
+	 *  Vérification qu'en cas de rajout de train sur la ligne, celui-ci est bien sur la ligne
+	 */
 	@Test
 	public void testAddTrain() {
 		Train train = new Train(canton, 0, 0, 0);
 		line.addTrain(train);
-		assertTrue(train == line.getTrains().element());
+		assertEquals(line.getTrains().element(), train);
 	}
 
-	/** vérification qu'en cas de rajout de canton sur la ligne, celui-ci est bien sur la ligne **/
+	/**
+	 *  Vérification qu'en cas de rajout de canton sur la ligne, celui-ci est bien sur la ligne
+	 */
 	@Test
 	public void testAddCanton() {
 		line.addCanton(canton3);
 		assertTrue(line.getCantons().contains(canton3));
 	}
 
-	/** vérification qu'en cas de mise en marche du logiciel, la ligne est bien en fonctionnement**/
-	/** pour un test plus rapide, initialiser GUIConstants.MAX_DURATION à 100 au lieu de 10000**/
+	/**
+	 *  Vérification qu'en cas de mise en marche du logiciel, la ligne est bien en fonctionnement
+	 */
 	@Test
 	public void testIsWorking() {
-		LineController lineController = new LineController(this);
+		LineController lineController = new LineController(100);
 		lineController.run();
+		lineController.stopTrains();
 		assertTrue(line.isWorking());
 	}
 
-
-	@Override
-	public void update(Observable o, Object arg) {
-		// TODO Auto-generated method stub	
+	/**
+	 *  Vérification que la ligne compte bien le bon nombre de passager
+	 */
+	@Test
+	public void testGetTotalPassenger() {
+		for (Station station : line.getStationList()){
+			station.setCurrentPassenger(0);
+		}
+		Station station = canton.getStation();
+		station.setCurrentPassenger(200);
+		assertTrue(line.getTotalPassengers()==200);
+		Train train = new Train(canton, 100, 0, 0);
+		line.addTrain(train);
+		assertTrue(line.getTotalPassengers()==300);
 	}
-
 }
