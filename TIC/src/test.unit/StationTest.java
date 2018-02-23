@@ -95,7 +95,7 @@ public class StationTest {
 		assertTrue(station.getPauseDuration()<=1500);
 		line.setPeriod("pleine");
 		assertTrue(station.getPauseDuration()>=1000);
-		assertTrue(station.getPauseDuration()<=1500);
+		assertTrue(station.getPauseDuration()<=1666);
 		
 	}
 
