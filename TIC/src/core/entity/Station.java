@@ -1,5 +1,9 @@
 package core.entity;
 
+import core.Constants;
+import core.TerminusException;
+import core.utility.RandomUtility;
+
 public class Station {
 	
 	// Name of the station
@@ -7,27 +11,24 @@ public class Station {
 	
 	// Position of the station on the line
 	private int position;
+	
+	//Crowd level of the Station
+	private int crowdLevel;
 
 	//Maximum capacity of the station
 	private int maxPassengers;
 	
 	//Number of current passenger
-	private int currentPassenger;
+	private volatile int currentPassenger;
 	
 	//Satisfaction of the passenger in the Station initialised at 75 (value beetwen 0 and 100)
-	private int satisfaction = 75;
+	private volatile int satisfaction = 75;
 	
 	//Number of reserve trains
-	private int numReserveTrain;
-	
-	//Crowd of the Station
-	private int crowdLevel;
-	
-	//If an accident occurred on the Station
-	private boolean accident = false;
+	private volatile int numReserveTrain;
 	
 	//The train in the Station
-	private Train train = null;
+	private volatile Train arrivalTrain = null;
 
 	public Station(String name, int position, int maxPassengers, int numReserveTrain, int crowdLevel) {
 		this.name = name;
@@ -35,10 +36,84 @@ public class Station {
 		this.maxPassengers = maxPassengers;
 		this.numReserveTrain = numReserveTrain;
 		this.crowdLevel = crowdLevel;
+		if (maxPassengers < Constants.INITIAL_PASSENGER_STATION){
+			this.currentPassenger = maxPassengers;
+		}
+		else {
+			this.currentPassenger = Constants.INITIAL_PASSENGER_STATION;
+		}
+	}
+	
+	public synchronized void enter(Train train) throws TerminusException {
+		if (arrivalTrain == null){
+			arrivalTrain = train;
+			arrivalTrain.setCurrentPosition(position);
+			
+			try {	
+				// Pause for taking passengers of the station
+				Thread.sleep(getPauseDuration());
+				
+				System.out.println("\n================== " + arrivalTrain.getName() + " arrived at " + name + " ==================\n");
+				
+				// Passengers getting off the train are now into the station
+				currentPassenger += arrivalTrain.getOffPassengers(this);
+				arrivalTrain.removeDestination(this);
+				
+				// New passengers on the train
+				int nbDest = arrivalTrain.getDestination().size();
+				int nbNewPassengers = 0;
+				if (nbDest > 0){
+					nbNewPassengers = RandomUtility.rand(0, currentPassenger/nbDest);
+					currentPassenger -= nbNewPassengers;
+					currentPassenger += arrivalTrain.addPassengers(nbNewPassengers);
+				}
+				
+				System.out.println(arrivalTrain);
+				System.out.println("===================================================================\n");
+				
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		else {			
+			// After taking passengers, the train try to leave his canton and enter on 
+			// the next if there isn't incident declared
+			Line line = Line.getInstance();
+			Canton nextCanton = line.getCantonByPosition(position + train.getSpeed());
+			if (!line.hasIncident(nextCanton)){
+				nextCanton.enter(train);
+			}
+		}
+	}
+
+	public synchronized void exit() {
+		arrivalTrain = null;
+		notify();
+	}
+	
+	/**
+	 * Somes passengers arrive into the station and somes leave the station
+	 */
+	public void updatePassengers(){
+		
+	}
+	
+	/**
+	 * @return the time of pause according to the period
+	 */
+	public int getPauseDuration(){
+		Line line = Line.getInstance();
+		int defaultTime = Constants.DEFAULT_PAUSE_STATION;
+		switch(line.getPeriod()){
+			case Line.PERIOD_VOID : 	return RandomUtility.rand(defaultTime/3, defaultTime);
+			case Line.PERIOD_NORMAL : 	return RandomUtility.rand(defaultTime/2, (3 * defaultTime)/2);
+			case Line.PERIOD_FULL : 	return RandomUtility.rand(defaultTime, (3 * defaultTime)/2);
+			default : 					return defaultTime;
+		}
 	}
 		
 	
-	//GETTER AND SETTER
+	/******************************************************/
 	
 	public String getName(){
 		return name;
@@ -46,6 +121,10 @@ public class Station {
 	
 	public int getPosition(){
 		return position;
+	}
+	
+	public void setPosition(int position){
+		this.position = position;
 	}
 
 	public int getMaxPassengers() {
@@ -84,20 +163,11 @@ public class Station {
 		this.crowdLevel = crowdLevel;
 	}
 
-	public boolean isAccident() {
-		return accident;
-	}
-
-	public void setAccident(boolean accident) {
-		this.accident = accident;
-	}
-
 	public Train getTrain() {
-		return train;
+		return arrivalTrain;
 	}
 
-	public void setTrain(Train train) {
-		this.train = train;
-	}	
-	
+	public void setTrain(Train arrivalTrain) {
+		this.arrivalTrain = arrivalTrain;
+	}
 }

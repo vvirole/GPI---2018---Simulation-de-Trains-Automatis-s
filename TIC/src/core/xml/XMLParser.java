@@ -42,16 +42,6 @@ public class XMLParser {
 	}
 	
 	/**
-	 * Get the count of a node giving a tagname
-	 * @param tagname the name of a node
-	 * @return count of the node
-	 */
-	public int getCount(String tagname){
-		NodeList nodes = document.getElementsByTagName(tagname);
-		return nodes.getLength();
-	}
-	
-	/**
 	 * Get the name of root node
 	 * @return the name node
 	 */
@@ -73,7 +63,7 @@ public class XMLParser {
 	
 	/**
 	 * Get the datas of a list of same nodes (same names)
-	 * wich contains only text node
+	 * which contains only text node
 	 * @param tagname the name of the node
 	 * @return a map collection of datas
 	 */

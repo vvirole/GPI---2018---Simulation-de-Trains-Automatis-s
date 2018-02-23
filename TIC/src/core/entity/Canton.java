@@ -3,7 +3,7 @@ package core.entity;
 public class Canton {
 
 	//Canton identity
-	private int id;
+	private String id;
 	
 	//Length of the canton on the frame
 	private int length;
@@ -11,17 +11,17 @@ public class Canton {
 	// Position where the canton begins
 	private int startPoint;
 	
-	//If an accident occurred on the Canton
-	private boolean accident = false;
-	
 	//The station at the end the canton
 	private Station station;
 	
 	// The train in the canton
 	private Train occupyingTrain = null;
+	
+	// Indicate if there is an incident
+	private boolean incident = false;
 
 	
-	public Canton(int id, int startPoint, int length, Station station) {
+	public Canton(String id, int startPoint, int length, Station station) {
 		this.id = id;
 		this.startPoint = startPoint;
 		this.length = length;	
@@ -30,18 +30,22 @@ public class Canton {
 	
 	public synchronized void enter(Train train) {
 		if (occupyingTrain != null) {
+			// If the next canton is occupied, the train wait
 			train.setCurrentPosition(startPoint);
 			try {
-				wait();
+				wait(200);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 		}
 		else {
+			// The train leave his current canton and the station
 			Canton oldCanton = train.getCurrentCanton();
+			oldCanton.getStation().exit();
+			oldCanton.exit();
+			// He is positionned now on this canton
 			train.setCurrentCanton(this);
 			train.updatePosition();
-			oldCanton.exit();
 			occupyingTrain = train;
 		}
 	}
@@ -51,9 +55,16 @@ public class Canton {
 		notify();
 	}
 	
-	//GETTER AND SETTER
+	/**
+	 * @return if the canton is free
+	 */
+	public boolean isFree(){
+		return (occupyingTrain == null);
+	}
+	
+	/*********************************************************/
 
-	public int getId() {
+	public String getId() {
 		return id;
 	}
 	
@@ -61,10 +72,14 @@ public class Canton {
 		return startPoint;
 	}
 	
+	public void setStartPoint(int startPoint){
+		this.startPoint = startPoint;
+	}
+	
 	public int getEndPoint(){
 		return startPoint + length;
 	}
-
+	
 	public int getLength() {
 		return length;
 	}
@@ -72,21 +87,21 @@ public class Canton {
 	public void setLength(int length) {
 		this.length = length;
 	}
-	
-	public boolean isFree(){
-		return (occupyingTrain == null);
-	}
-
-	public boolean isAccident() {
-		return accident;
-	}
-
-	public void setAccident(boolean accident) {
-		this.accident = accident;
-	}
 
 	public Station getStation() {
 		return station;
+	}
+	
+	public void setStation(Station station) {
+		this.station = station;
+	}
+
+	public boolean hasIncident() {
+		return incident;
+	}
+
+	public void setIncident(boolean incident) {
+		this.incident = incident;
 	}
 	
 }
