@@ -15,6 +15,10 @@ import core.xml.UnvalidFileException;
 import core.Constants;
 public class LineControllerTest {
 
+/**
+ * @author RE Thomas
+ */
+	
 	private Line line;
 	private Canton canton, canton2;
 	
@@ -27,7 +31,7 @@ public class LineControllerTest {
 		canton2 = line.getCanton(1);
 	}
 	/**
-	 * vérification de la bonne résolution des accidents si il en a le temps
+	 * verifying the correct resolution of accidents if he has the time to do it
 	 */
 	@Test
 	public void testRun() {
