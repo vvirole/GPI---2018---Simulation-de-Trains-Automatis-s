@@ -110,14 +110,18 @@ public class LineController extends Observable implements Runnable {
 	 * Stop the traffic on the line
 	 */
 	public void stopTrains(){
-		line.getTrains().forEach(train -> train.setRunning(false));
+		for (Train train : line.getTrains()){
+			train.setRunning(false);
+		}
 	}
 	
 	/**
 	 * Run the traffic on the line
 	 */
 	public void runTrains(){
-		line.getTrains().forEach(train -> train.setRunning(true));
+		for (Train train : line.getTrains()){
+			train.setRunning(true);
+		}
 	}
 	
 	/*********************************************************************/

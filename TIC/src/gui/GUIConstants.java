@@ -6,8 +6,8 @@ public class GUIConstants {
 	
 	/* * * * * * * * * * * * WINDOW * * * * * * * * * * * * */
 	
-	public static final int WINDOW_WIDTH = 1200;
-	public static final int WINDOW_HEIGHT = 600;
+	public static final int WINDOW_WIDTH = 1400;
+	public static final int WINDOW_HEIGHT = 700;
 	
 	/* * * * * * * * * * * * COLORS * * * * * * * * * * * * */
 	
