@@ -75,9 +75,7 @@ public class LineBuilder {
 		// We create the line and add the cantons
 		String nameLine = parser.getTextNode("nameLine");
 		Line line = new Line(nameLine, usedLength);
-		for (Canton canton : cantonList){
-			line.addCanton(canton);
-		}
+		cantonList.forEach(canton -> line.addCanton(canton));
 		
 		// Adjustment of the line according to the constants LINE_LENGTH defined in Constants.java
 		double adjust = (double) GUIConstants.LINE_LENGTH / (double) usedLength;

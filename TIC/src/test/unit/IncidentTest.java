@@ -3,6 +3,7 @@ package test.unit;
 import static org.junit.Assert.*;
 
 import java.io.File;
+import java.util.Map.Entry;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -13,10 +14,6 @@ import core.entity.Incident;
 import core.entity.Line;
 import core.entity.Train;
 import core.xml.UnvalidFileException;
-
-/**
- * @author RE Thomas
- */
 
 public class IncidentTest {
 
@@ -35,7 +32,7 @@ public class IncidentTest {
 	
 	
 	/**
-	 * Verifying of the resolution's time of an accident
+	 * Verification du temps de résolution d'un accident
 	 */
 	@Test
 	public void testGetTimeToResolve() {
@@ -53,7 +50,7 @@ public class IncidentTest {
 	}
 	
 	/**
-	 * Verifying that the line knows that a train is before or after an accident
+	 * Vérification que la ligne sache qu'un train est avant ou apres un accident
 	 */
 	
 	@Test

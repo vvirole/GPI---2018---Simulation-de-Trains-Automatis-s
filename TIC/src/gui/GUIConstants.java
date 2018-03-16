@@ -6,8 +6,8 @@ public class GUIConstants {
 	
 	/* * * * * * * * * * * * WINDOW * * * * * * * * * * * * */
 	
-	public static final int WINDOW_WIDTH = 1400;
-	public static final int WINDOW_HEIGHT = 700;
+	public static final int WINDOW_WIDTH = 1200;
+	public static final int WINDOW_HEIGHT = 600;
 	
 	/* * * * * * * * * * * * COLORS * * * * * * * * * * * * */
 	
@@ -36,6 +36,7 @@ public class GUIConstants {
 	
 	// -------------------------------------------------------------- //
 	
-	public static int MAX_DURATION = 1000;
+	public static int MAX_DURATION = 100;
+	public static int START_HOURS = 5;
 		
 }

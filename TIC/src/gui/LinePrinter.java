@@ -57,11 +57,8 @@ public class LinePrinter {
 		g2.setColor(LINE_COLOR);
 		g2.setStroke(new BasicStroke(LINE_STROKE));
 		g2.drawLine(LINE_X, LINE_Y, LINE_X + line.getLength(), LINE_Y);
-		
-		for (Canton canton : line.getCantons()){
-			printCanton(canton, g2);
-			printStation(canton.getStation(), g2);
-		}	
+		line.getCantons().forEach(canton -> printCanton(canton, g2));
+		line.getCantons().forEach(canton -> printStation(canton.getStation(), g2));
 		for (Entry<Incident, Integer> entry : line.listIncidents().entrySet()){
 			printIncident(entry.getKey(), g2);
 		}

@@ -9,6 +9,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.Insets;
+import java.awt.Panel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Observable;
@@ -22,6 +23,7 @@ import javax.swing.JPanel;
 
 import core.LineController;
 import core.entity.Line;
+import core.utility.Clock;
 import gui.GUIConstants;
 
 /**
@@ -92,7 +94,7 @@ public class SimulationPanel extends JPanel implements Observer {
 		jlTitle.setHorizontalAlignment(JLabel.CENTER);
 		jlTitle.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2));
 		
-		jlTurn = new JLabel("Cycle : 0");
+		jlTurn = new JLabel(Clock.getInstance().toString());
 		jlTurn.setForeground(Color.WHITE);
 		jlTurn.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2));
 		jlTurn.setHorizontalAlignment(JLabel.CENTER);
@@ -167,8 +169,13 @@ public class SimulationPanel extends JPanel implements Observer {
 	 */
 	@Override
 	public void update(Observable observable, Object object) {
-		jlTurn.setText("Cycle : " + ((LineController) observable).getTime());
-		dashboardPanel.repaint();	
+		if (controller.getTime() <= GUIConstants.MAX_DURATION) {
+			jlTurn.setText(Clock.getInstance().toString());
+			dashboardPanel.repaint();
+		}
+		else {
+			gui.GUIFrame.setCurrentPanel(Panels.STATISTICS);
+		}
 	}
 	
 	

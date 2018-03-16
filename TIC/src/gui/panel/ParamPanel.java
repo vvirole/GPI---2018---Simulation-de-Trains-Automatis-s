@@ -155,7 +155,7 @@ public class ParamPanel extends JPanel {
 		
 		jlIncidentRation = new JLabel ("• Ratio d'apparition d'incident sur la ligne :");
 		jlTimeResolveProblem = new JLabel ("• Temps moyen pour résoudre un problème :");
-		jlTimeSimulation = new JLabel ("• Durée de la simulation (en cycles) :");
+		jlTimeSimulation = new JLabel ("• Durée de la simulation (en heures) :");
 		jlTrainBasicSpeed = new JLabel ("• Vitesse par défault des trains :");
 		
 		/************************* TEXTFIELDS ******************************/
@@ -285,7 +285,7 @@ public class ParamPanel extends JPanel {
 	 * 
 	 */
 	private void applyParam(){
-		GUIConstants.MAX_DURATION					= Integer.parseInt(jtfTimeofSimulation.getText());
+		GUIConstants.MAX_DURATION					= Integer.parseInt(jtfTimeofSimulation.getText()) * 3600;
 		Constants.INITIAL_PASSENGER_STATION 		= Integer.parseInt(jtfInitPassenger.getText());
 		Constants.SHORT_TRAIN_CAPACITY				= Integer.parseInt(jtfNbShortTrain.getText());
 		Constants.LONG_TRAIN_CAPACITY				= Integer.parseInt(jtfNbLongTrain.getText());

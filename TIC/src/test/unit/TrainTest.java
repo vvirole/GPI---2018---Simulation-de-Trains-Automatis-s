@@ -14,10 +14,6 @@ import core.entity.Station;
 import core.entity.Train;
 import core.xml.UnvalidFileException;
 
-/**
- * @author RE Thomas
- */
-
 public class TrainTest {
 
 	private Line line;
@@ -33,7 +29,7 @@ public class TrainTest {
 	}
 	
 	/**
-	 *  Verifying that the train changes position during its run time
+	 *  Vérification que le train change bien de position durant son temps de run
 	 */
 	@Test
 	public void testRun() {
@@ -42,9 +38,20 @@ public class TrainTest {
 		train.run();
 		assertTrue(train.getCurrentPosition() >= 0);
 	}
+	
+	/** vérification que le train ne change pas de position si il y a un accident sur son canton**/
+	/** voir comment limiter le nombre de boucle de train.run**/
+	/**@Test
+	public void testRunWithIncident() {
+		Train train = new Train(canton, 0, 0, 0);
+		train.setSpeed(50);
+		canton.setIncident(true);
+		train.run();
+		assertTrue(train.getCurrentPosition()==0);
+	}**/
 
 	/**
-	 * Verifying the number of passengers who can not get on the train if there is no destination (last station)
+	 * Vérification du nombre de passager qui ne peuvent pas rentrer dans le train si il n'y a pas de destination (derniere station)
 	 */
 	@Test
 	public void testAddPassengersNoDestination() {
@@ -56,7 +63,7 @@ public class TrainTest {
 	}
 	
 	/**
-	 * Verifying the number of passengers who can not get on the train if the number of arrivals is right
+	 * Vérification du nombre de passager qui ne peuvent pas rentrer dans le train si le nombre d'arrivant est pile le bon
 	 */
 	@Test
 	public void testAddPassengersFull() {
@@ -66,7 +73,7 @@ public class TrainTest {
 	}
 	
 	/**
-	 * Verifying the number of passengers who can not get on the train if the number of arrivals is a random number
+	 * Vérification du nombre de passager qui ne peuvent pas rentrer dans le train si le nombre d'arrivant est un nombre au hasard
 	 */
 	@Test
 	public void testAddPassengers() {
@@ -76,7 +83,7 @@ public class TrainTest {
 	}
 
 	/**
-	 * Verifying the position change of the train according to its speed
+	 * Vérification du changement de position du train en fonction de sa vitesse
 	 */
 	@Test
 	public void testUpdatePosition() {
@@ -89,9 +96,6 @@ public class TrainTest {
 		}
 	}
 	
-	/**
-	 * Verifying the number of passengers in a train decreases well
-	 */
 	@Test
 	public void testGetOffPassengers() {
 		station = canton.getStation();

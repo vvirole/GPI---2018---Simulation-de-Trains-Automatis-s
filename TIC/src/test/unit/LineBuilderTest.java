@@ -13,10 +13,6 @@ import core.entity.Line;
 import core.entity.Station;
 import core.xml.UnvalidFileException;
 
-/**
- * @author RE Thomas
- */
-
 public class LineBuilderTest {
 
 	private Line line;
@@ -31,10 +27,6 @@ public class LineBuilderTest {
 		canton2 = line.getCanton(1);
 	}
 	
-	/**
-	 * Verifying that the station is at the end of the canton
-	 * Verifying that two stations do not have the same name
-	 */
 	@Test
 	public void testBuildLine() {
 		Station station = canton.getStation();
@@ -43,9 +35,6 @@ public class LineBuilderTest {
 		assertTrue(station.getName()!=station2.getName());
 	}
 
-	/**
-	 * Verifying that two stations do not have the same position
-	 */
 	@Test
 	public void testAdjustLines() {
 		Station station = canton.getStation();

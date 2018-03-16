@@ -34,4 +34,5 @@ public class Constants {
 	
 	// Average frequence of arrival train on the line
 	public static final int ARRIVAL_TRAIN_UNIT = 20;
+	
 }
