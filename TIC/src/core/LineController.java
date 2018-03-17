@@ -1,12 +1,15 @@
 package core;
 
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
 import core.entity.Canton;
 import core.entity.Incident;
 import core.entity.Line;
+import core.entity.Station;
 import core.entity.Train;
+import core.utility.DataStorage;
 import core.utility.RandomUtility;
 import gui.GUIConstants;
 
@@ -66,6 +69,9 @@ public class LineController extends Observable implements Runnable {
 				line.resolveIncident();
 			}
 			
+			// Store data of this current cycle
+			storeData();
+			
 			// Notify the simulation panel that there is a change (repaint needed)
 			setChanged();
 			notifyObservers(); 
@@ -81,20 +87,41 @@ public class LineController extends Observable implements Runnable {
 		stopTrains();
 	}
 	
+	/**
+	 * 
+	 */
+	private void storeData() {
+		int satisfaction = 0;
+		int passenger = 0;
+		List<Station> stations = line.getStationList();
+		for (Station station : stations) {
+			satisfaction += station.getSatisfaction();
+			passenger += station.getCurrentPassenger();
+		}
+		satisfaction = satisfaction / line.getNbCanton();
+		DataStorage.getInstance().addPassengerData(getTime(), passenger);
+		DataStorage.getInstance().addSatisfactionData(getTime(), satisfaction);
+		
+	}
+
 	/*********************************************************************/
 	
 	/**
 	 * Stop the traffic on the line
 	 */
 	public void stopTrains(){
-		line.getTrains().forEach(train -> train.setRunning(false));
+		for (Train train : line.getTrains()){
+			train.setRunning(false);
+		}
 	}
 	
 	/**
 	 * Run the traffic on the line
 	 */
 	public void runTrains(){
-		line.getTrains().forEach(train -> train.setRunning(true));
+		for (Train train : line.getTrains()){
+			train.setRunning(true);
+		}
 	}
 	
 	/*********************************************************************/
@@ -104,6 +131,10 @@ public class LineController extends Observable implements Runnable {
 	 */
 	public int getTime(){
 		return time;
+	}
+	
+	public void setDuration(int duration){
+		this.duration = duration;
 	}
 
 }

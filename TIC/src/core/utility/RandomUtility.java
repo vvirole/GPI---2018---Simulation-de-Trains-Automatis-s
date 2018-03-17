@@ -27,6 +27,7 @@ public class RandomUtility {
 	 * Generate the new destinations of the new passengers of the train
 	 * @param nbPassenger the number of new passengers
 	 * @param destinations a map of destinations
+	 * @return the updated destination map with the new passengers
 	 */
 	public static Map<Station, Integer> generateDest(int nbPassenger, Map<Station, Integer> destinations) {
 		

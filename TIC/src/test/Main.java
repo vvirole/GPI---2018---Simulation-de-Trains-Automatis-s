@@ -11,7 +11,7 @@ import gui.GUIFrame;
  * @author Benoît Cons
  * @author Thomas Re
  * @author Vincent Virole
- * @version 1.0
+ * @version 2.0
  *
  */
 public class Main {

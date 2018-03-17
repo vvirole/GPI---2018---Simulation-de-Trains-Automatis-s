@@ -204,7 +204,8 @@ public class SimulationPanel extends JPanel implements Observer {
 	public class ActionStop implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			
+			line.setWorking(false);
+			gui.GUIFrame.setCurrentPanel(Panels.STATISTICS);
 		}
 	}
 

@@ -11,6 +11,13 @@ import core.*;
 import core.entity.*;
 import core.xml.UnvalidFileException;
 
+/**
+ * @author RE Thomas
+ */
+
+/** 
+ * in the class "Canton" put in the function "enter" a value to wait otherwise the test loop to infinity.
+ */
 
 public class CantonTest {
 	
@@ -28,17 +35,24 @@ public class CantonTest {
 	}
 
 	/**
-	 * Vérification qu'un canton n'est plus libre si un train est dedans
+	 * Verifying that a canton is no longer free if a train is in it
+	 * put a value to the wait
 	 */
 	@Test
 	public void testEnter() {
 		Train train = new Train(canton, 0, 0, 0);
+		Train train2 = new Train(canton, 0, 0, 0);
+		assertTrue(canton2.isFree());
 		canton2.enter(train);
 		assertFalse(canton2.isFree());
+		//canton2.setOccupyingTrain(null);
+		canton2.enter(train2);
+		assertTrue(train2.getCurrentPosition()==canton2.getStartPoint());
+		assertTrue(train.getCurrentCanton().getId()!=train2.getCurrentCanton().getId());
 	}
 	
 	/**
-	 * Vérification qu'un canton redevient libre si le train qui l'occupé s'en va
+	 * Verifying that a canton will become free again if the train that occupies it goes away
 	 */
 	@Test
 	public void testExit() {
@@ -49,7 +63,7 @@ public class CantonTest {
 	}
 
 	/**
-	 * Vérification qu'en cas d'accident, le canton en prend bien compte
+	 * Verifying that in the event of an accident, the canton takes it into account
 	 */
 	@Test
 	public void testHasIncident() {

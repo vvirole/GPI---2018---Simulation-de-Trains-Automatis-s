@@ -61,9 +61,8 @@ public class Station {
 				
 				// New passengers on the train
 				int nbDest = arrivalTrain.getDestination().size();
-				int nbNewPassengers = 0;
 				if (nbDest > 0){
-					nbNewPassengers = RandomUtility.rand(0, currentPassenger/nbDest);
+					int nbNewPassengers = RandomUtility.rand(0, currentPassenger/nbDest);
 					currentPassenger -= nbNewPassengers;
 					currentPassenger += arrivalTrain.addPassengers(nbNewPassengers);
 				}
@@ -101,13 +100,13 @@ public class Station {
 	/**
 	 * @return the time of pause according to the period
 	 */
-	private int getPauseDuration(){
+	public int getPauseDuration(){
 		Line line = Line.getInstance();
 		int defaultTime = Constants.DEFAULT_PAUSE_STATION;
 		switch(line.getPeriod()){
 			case Line.PERIOD_VOID : 	return RandomUtility.rand(defaultTime/3, defaultTime);
 			case Line.PERIOD_NORMAL : 	return RandomUtility.rand(defaultTime/2, (3 * defaultTime)/2);
-			case Line.PERIOD_FULL : 	return RandomUtility.rand(defaultTime, (2 * defaultTime)/3);
+			case Line.PERIOD_FULL : 	return RandomUtility.rand(defaultTime, (5 * defaultTime)/3);
 			default : 					return defaultTime;
 		}
 	}

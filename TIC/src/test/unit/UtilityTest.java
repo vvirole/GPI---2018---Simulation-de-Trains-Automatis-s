@@ -6,8 +6,15 @@ import org.junit.Test;
 
 import core.utility.RandomUtility;
 
+/**
+ * @author RE Thomas
+ */
+
 public class UtilityTest {
 
+	/**
+	 * test to obtain a random number
+	 */
 	@Test
 	public void testRand() {
 		int min = 0, max = 100;

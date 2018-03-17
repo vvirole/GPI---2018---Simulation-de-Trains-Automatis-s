@@ -33,7 +33,7 @@ public class Canton {
 			// If the next canton is occupied, the train wait
 			train.setCurrentPosition(startPoint);
 			try {
-				wait();
+				wait(200);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
