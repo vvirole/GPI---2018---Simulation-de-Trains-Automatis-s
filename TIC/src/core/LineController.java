@@ -9,6 +9,7 @@ import core.entity.Incident;
 import core.entity.Line;
 import core.entity.Station;
 import core.entity.Train;
+import core.utility.Clock;
 import core.utility.DataStorage;
 import core.utility.RandomUtility;
 import gui.GUIConstants;
@@ -26,17 +27,20 @@ public class LineController extends Observable implements Runnable {
 	// The line instance
 	private Line line = Line.getInstance();
 	
-	// Max duration of the simulation
-	private int duration = GUIConstants.MAX_DURATION;
+	// Max duration of the simulation (secondes)
+	private int duration;
 	
 	// Current cycle of the simulation
-	private int time = 0;
+	private Clock clock;
 	
 	public LineController(int duration) {
 		this.duration = duration;
+		this.clock = Clock.newInstance();
+		this.clock.start();
 	}
 	
 	public LineController(Observer observer){
+		this(GUIConstants.MAX_DURATION);
 		addObserver(observer);
 	}
 
@@ -47,8 +51,8 @@ public class LineController extends Observable implements Runnable {
 		line.setWorking(true);
 		runTrains();
 	
-		while(line.isWorking() && time <= duration){
-			if (time % Constants.ARRIVAL_TRAIN_UNIT == 0){
+		while(line.isWorking() && clock.getCounter() <= duration){
+			if (clock.getCounter() % Constants.ARRIVAL_TRAIN_UNIT == 0){
 				Canton startCanton = line.getCantons().get(0);
 				if (startCanton.isFree() && !startCanton.hasIncident()){
 					String currentPeriod = line.getPeriod();
@@ -59,18 +63,33 @@ public class LineController extends Observable implements Runnable {
 				}
 			}	
 			
-			int i = RandomUtility.rand(0, line.getNbCanton() - 1);
-			Canton canton = line.getCanton(i);
-			if (!canton.hasIncident() && RandomUtility.rand(0, 500) < Constants.INCIDENT_RATIO){
-				line.newIncident(canton, Incident.INFRASTRUCTURE_INCIDENT);
-			}
-			
 			if (line.hasIncident()){
 				line.resolveIncident();
 			}
 			
-			// Store data of this current cycle
-			storeData();
+			// Each minute
+			if (clock.getCounter() % 60 == 0){
+				
+				// Store data
+				storeData(clock.getElapsedMinute()); 
+				
+				// Update the period of journey
+				line.updatePeriod(clock.getHour());
+				
+				int i = RandomUtility.rand(0, line.getNbCanton() - 1);
+				Canton canton = line.getCanton(i);
+				if (!canton.hasIncident() && RandomUtility.rand(0, 20) < Constants.INCIDENT_RATIO){
+					line.newIncident(canton, Incident.INFRASTRUCTURE_INCIDENT);
+				}
+			}
+			
+			// Eeach 2 minutes
+			if (clock.getCounter() % 120 == 0){
+				for (Station station : line.getStationList()){
+					station.updatePassengers();
+					station.updateSatisfaction();
+				}
+			}
 			
 			// Notify the simulation panel that there is a change (repaint needed)
 			setChanged();
@@ -81,16 +100,18 @@ public class LineController extends Observable implements Runnable {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			time++;
 		}
-		// We stop the current trains on the line
-		stopTrains();
+		
+		setChanged();
+		notifyObservers(); 
+		stopTrains(); // We stop the current trains on the line
 	}
-	
+
 	/**
-	 * 
+	 * Store the data of the current cycle of the simulation
+	 * @minute the number of minute elapsed
 	 */
-	private void storeData() {
+	private void storeData(int minute) {
 		int satisfaction = 0;
 		int passenger = 0;
 		List<Station> stations = line.getStationList();
@@ -99,8 +120,8 @@ public class LineController extends Observable implements Runnable {
 			passenger += station.getCurrentPassenger();
 		}
 		satisfaction = satisfaction / line.getNbCanton();
-		DataStorage.getInstance().addPassengerData(getTime(), passenger);
-		DataStorage.getInstance().addSatisfactionData(getTime(), satisfaction);
+		DataStorage.getInstance().addPassengerData(minute, passenger);
+		DataStorage.getInstance().addSatisfactionData(minute, satisfaction);
 		
 	}
 
@@ -130,7 +151,7 @@ public class LineController extends Observable implements Runnable {
 	 * @return the current cycle of simulation
 	 */
 	public int getTime(){
-		return time;
+		return clock.getCounter();
 	}
 	
 	public void setDuration(int duration){

@@ -72,18 +72,11 @@ public class StatPanel extends JPanel{
 	private JButton jbMenu;
 	private JButton jbNew;
 	private JButton jbExit;
-//	private JButton jbNextStation;
-//	private JButton jbPreviousStation;
 	
 	private JFreeChart XYChartTraveler;
 	private XYSeriesCollection seriesCollectionTraveler;
 	private JFreeChart XYChartSatisfaction;
 	private XYSeriesCollection seriesCollectionSatisfaction;
-	
-	//private JFreeChart pieChart;
-	//private JFreeChart categoryChart;
-	//private DefaultPieDataset pieData;
-	//private DefaultCategoryDataset categoryDataset;
 	
 	private DataStorage dataStorage = DataStorage.getInstance();
 	
@@ -126,20 +119,13 @@ public class StatPanel extends JPanel{
 		NumberTravelerPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		buttonPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		
-		
-		
 		XYChartTraveler = createXYChartTraveler();
 		NumberTravelerChartPanel = new ChartPanel(XYChartTraveler);
 		
 		XYChartSatisfaction = createXYChartSatisfaction();
 		SatisfactionChartPanel = new ChartPanel(XYChartSatisfaction);
 		
-		//NbIncidentChartPanel;
-		
-		
-		
 		// Buttons
-		
 		
 		jbMenu = new JButton("Menu");
 		jbNew = new JButton("Nouvelle partie");
@@ -148,8 +134,6 @@ public class StatPanel extends JPanel{
 		jbMenu.addActionListener(new ActionMenu());
 		jbNew.addActionListener(new ActionNew());
 		jbExit.addActionListener(new ActionExit());
-//		jbNextStation.addActionListener(new ActionNew());
-//		jbPreviousStation.addActionListener(new ActionExit());
 		
 		jbMenu.setPreferredSize(new Dimension(200, 50));
 		jbNew.setPreferredSize(new Dimension(200, 50));
@@ -179,22 +163,16 @@ public class StatPanel extends JPanel{
 		gbc.gridx = 0; gbc.gridy = 1;
 		add(NbIncidentPanel, gbc);
 		gbc.gridx = 1; gbc.gridy = 1;
-		add(buttonPanel, gbc);
-		
+		add(buttonPanel, gbc);	
 	}
-	
-	
-	private void initFont(){
 		
+	private void initFont(){		
 		Font buttonFont = new Font(Font.DIALOG, Font.BOLD, 20);
 		jbMenu.setFont(buttonFont);
 		jbNew.setFont(buttonFont);
-		jbExit.setFont(buttonFont);
-		
+		jbExit.setFont(buttonFont);		
 	}
-	
-	
-	
+		
 	private JFreeChart createXYChartTraveler() {
 		
 		XYSeries graph = new XYSeries("Evolution du nombre de voyageur sur la ligne");
@@ -209,7 +187,7 @@ public class StatPanel extends JPanel{
 
 		seriesCollectionTraveler = new XYSeriesCollection();
 		seriesCollectionTraveler.addSeries(graph);
-		return ChartFactory.createXYLineChart("Évolution du nombre de voyageur sur la ligne", "Cycle", "Nombre de voyageur total", seriesCollectionTraveler, PlotOrientation.VERTICAL, true, true, false);
+		return ChartFactory.createXYLineChart("Évolution du nombre de voyageur", "temps (minutes)", "Nombre de voyageur total", seriesCollectionTraveler, PlotOrientation.VERTICAL, true, true, false);
 	
 	}
 	
@@ -228,7 +206,7 @@ public class StatPanel extends JPanel{
 
 		seriesCollectionSatisfaction = new XYSeriesCollection();
 		seriesCollectionSatisfaction.addSeries(graph);
-		return ChartFactory.createXYLineChart("Évolution du taux de satisfaction moyen", "Cycle", "Taux de satisfaction moyen", seriesCollectionSatisfaction, PlotOrientation.VERTICAL, true, true, false);
+		return ChartFactory.createXYLineChart("Évolution du taux de satisfaction moyen", "temps (minutes)", "Taux de satisfaction moyen", seriesCollectionSatisfaction, PlotOrientation.VERTICAL, true, true, false);
 	
 	}
 	
@@ -240,15 +218,6 @@ public class StatPanel extends JPanel{
 			
 		}
 	}
-	
-	
-	public class ActionPrevious implements ActionListener {
-		@Override
-		public void actionPerformed(ActionEvent e) {		
-			
-		}
-	}
-	
 	
 	public class ActionMenu implements ActionListener {
 		@Override

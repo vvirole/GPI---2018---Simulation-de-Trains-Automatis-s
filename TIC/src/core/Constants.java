@@ -9,7 +9,7 @@ package core;
 public class Constants {
 	
 	// Initial number of passengers by station
-	public static int INITIAL_PASSENGER_STATION = 200;
+	public static int INITIAL_PASSENGER_STATION = 100;
 	
 	// Basic speed of trains
 	public static int TRAIN_BASIC_SPEED = 5;

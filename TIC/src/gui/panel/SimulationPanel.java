@@ -22,6 +22,7 @@ import javax.swing.JPanel;
 
 import core.LineController;
 import core.entity.Line;
+import core.utility.Clock;
 import gui.GUIConstants;
 
 /**
@@ -92,7 +93,7 @@ public class SimulationPanel extends JPanel implements Observer {
 		jlTitle.setHorizontalAlignment(JLabel.CENTER);
 		jlTitle.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2));
 		
-		jlTurn = new JLabel("Cycle : 0");
+		jlTurn = new JLabel(Clock.getInstance().toString());
 		jlTurn.setForeground(Color.WHITE);
 		jlTurn.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2));
 		jlTurn.setHorizontalAlignment(JLabel.CENTER);
@@ -161,14 +162,20 @@ public class SimulationPanel extends JPanel implements Observer {
 	}
 	
 	/**
-	 * Update the render of this panel when he receives a notification
+	 * Update the render of this panel when he receives a notification.
 	 * @param obervable 
 	 * @param object
 	 */
 	@Override
 	public void update(Observable observable, Object object) {
-		jlTurn.setText("Cycle : " + ((LineController) observable).getTime());
-		dashboardPanel.repaint();	
+		if (controller.getTime() <= GUIConstants.MAX_DURATION){
+			jlTurn.setText(Clock.getInstance().toString());
+			dashboardPanel.repaint();
+		}
+		else {
+			line.setWorking(false);
+			gui.GUIFrame.setCurrentPanel(Panels.STATISTICS);
+		}
 	}
 	
 	
@@ -184,6 +191,7 @@ public class SimulationPanel extends JPanel implements Observer {
 			if (!line.isWorking()){
 				simulationThread = new Thread(controller);
 				simulationThread.start();
+				Clock.getInstance().setRunning(true);
 			}
 		}
 	}
@@ -195,6 +203,7 @@ public class SimulationPanel extends JPanel implements Observer {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			line.setWorking(false);
+			Clock.getInstance().setRunning(false);
 		}
 	}
 		
@@ -205,6 +214,7 @@ public class SimulationPanel extends JPanel implements Observer {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			line.setWorking(false);
+			Clock.getInstance().close();
 			gui.GUIFrame.setCurrentPanel(Panels.STATISTICS);
 		}
 	}

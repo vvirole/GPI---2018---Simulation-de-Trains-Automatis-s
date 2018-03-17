@@ -2,19 +2,21 @@ package gui;
 
 import java.awt.Color;
 
+import core.Constants;
+
 public class GUIConstants {
 	
 	/* * * * * * * * * * * * WINDOW * * * * * * * * * * * * */
 	
-	public static final int WINDOW_WIDTH = 1400;
-	public static final int WINDOW_HEIGHT = 700;
+	public static final int WINDOW_WIDTH = 1200;
+	public static final int WINDOW_HEIGHT = 600;
 	
 	/* * * * * * * * * * * * COLORS * * * * * * * * * * * * */
 	
 	public static final Color LINE_COLOR = new Color(200, 200, 200);
 	public static final Color STATION_COLOR = new Color(203, 67, 53);
 	public static final Color SHORT_TRAIN_COLOR = new Color(220, 118, 51);
-	public static final Color LONG_TRAIN_COLOR = new Color(200, 60, 30);
+	public static final Color LONG_TRAIN_COLOR = new Color(200, 150, 30);
 	public static final Color RESERVE_TRAIN_COLOR = new Color(230, 142, 100);
 	
 	/* * * * * * * * * * * * SIMULATION CONSTANTS * * * * * * * * * * * */
@@ -36,6 +38,8 @@ public class GUIConstants {
 	
 	// -------------------------------------------------------------- //
 	
-	public static int MAX_DURATION = 1000;
-		
+	public static final int TIME_SPEED = 50;	
+	public static final int START_HOUR = 7;
+	public static int MAX_DURATION = 24;
+	
 }

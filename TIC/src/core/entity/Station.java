@@ -67,6 +67,15 @@ public class Station {
 					currentPassenger += arrivalTrain.addPassengers(nbNewPassengers);
 				}
 				
+				if (currentPassenger > maxPassengers){
+					currentPassenger = maxPassengers;
+				}
+				
+				if (isTerminus()){
+					exit();
+					throw new TerminusException();
+				}
+				
 				System.out.println(arrivalTrain);
 				System.out.println("===================================================================\n");
 				
@@ -92,9 +101,70 @@ public class Station {
 	
 	/**
 	 * Somes passengers arrive into the station and somes leave the station
+	 * according to the period of journey
 	 */
 	public void updatePassengers(){
+		Line line = Line.getInstance();
+		int newPassenger = 0, leavePassenger = 0;
 		
+		if (currentPassenger == 0) return;
+		
+		switch(line.getPeriod()){
+			case Line.PERIOD_FULL :
+				if (!isTerminus())
+					newPassenger = RandomUtility.rand(0, maxPassengers/5);
+				leavePassenger = RandomUtility.rand(0, maxPassengers/20);
+				break;
+				
+			case Line.PERIOD_VOID :
+				if (!isTerminus())
+					newPassenger = RandomUtility.rand(0, maxPassengers/30);
+				leavePassenger = RandomUtility.rand(0, maxPassengers/20);
+				break;
+				
+			case Line.PERIOD_NORMAL :
+				if (!isTerminus())
+					newPassenger = RandomUtility.rand(0, maxPassengers/20);
+				leavePassenger = RandomUtility.rand(0, maxPassengers/20);
+				break;
+				
+			default : break;
+		}
+		
+		if (isTerminus()){
+			switch(line.getPeriod()){
+				case Line.PERIOD_FULL : leavePassenger *= 9; break;
+				case Line.PERIOD_VOID : leavePassenger *= 5; break;
+				case Line.PERIOD_NORMAL : leavePassenger *= 7; break;
+				default: break;
+			}
+		}	
+		
+		int futurePassenger = currentPassenger + newPassenger - leavePassenger;
+		if (futurePassenger < 0){
+			currentPassenger = 0;
+		}
+		else if (futurePassenger > maxPassengers){
+			currentPassenger = maxPassengers;
+		}
+		else {
+			currentPassenger = futurePassenger;
+		}
+	}
+	
+	/**
+	 * Update the satisfaction level of the station
+	 */
+	public void updateSatisfaction(){
+		if (currentPassenger > maxPassengers/2){
+			if (satisfaction > 1) satisfaction -= 2;
+		}
+		if (Line.getInstance().hasIncident()){
+			if (satisfaction > 0) satisfaction--;
+		}
+		else {
+			if (satisfaction < 100) satisfaction++;
+		}
 	}
 	
 	/**
@@ -109,6 +179,13 @@ public class Station {
 			case Line.PERIOD_FULL : 	return RandomUtility.rand(defaultTime, (5 * defaultTime)/3);
 			default : 					return defaultTime;
 		}
+	}
+	
+	/**
+	 * @return true if the station is the terminus of the line, false else
+	 */
+	public boolean isTerminus(){
+		return Line.getInstance().getTerminus().equals(this);
 	}
 		
 	

@@ -25,7 +25,7 @@ public class Train extends Thread {
 	private Canton currentCanton;
 	
 	//Current position in the Canton
-	private int currentPosition = 0;
+	private int currentPosition;
 	
 	//Type of the train
 	private int type;
@@ -53,6 +53,7 @@ public class Train extends Thread {
 		this.currentPassenger = currentPassenger;
 		this.speed = speed;
 		this.type = type;
+		this.currentPosition = currentCanton.getStartPoint();
 		currentCanton.enter(this);
 		
 		// Initialisation of the map destination 

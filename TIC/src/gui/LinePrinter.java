@@ -60,8 +60,10 @@ public class LinePrinter {
 		
 		for (Canton canton : line.getCantons()){
 			printCanton(canton, g2);
-			printStation(canton.getStation(), g2);
 		}	
+		for (Station station : line.getStationList()){
+			printStation(station, g2);
+		}
 		for (Entry<Incident, Integer> entry : line.listIncidents().entrySet()){
 			printIncident(entry.getKey(), g2);
 		}
