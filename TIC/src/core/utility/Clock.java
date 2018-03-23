@@ -53,6 +53,7 @@ public class Clock extends Thread {
 	 */
 	public void close(){
 		stop = true;
+		running = false;
 	}
 
 	/**

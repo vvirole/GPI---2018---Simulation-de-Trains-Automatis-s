@@ -39,7 +39,7 @@ public class TrainTest {
 	public void testRun() {
 		Train train = new Train(canton, 0, 0, 0);
 		train.setSpeed(50);
-		train.run();
+		train.updatePosition();
 		assertTrue(train.getCurrentPosition() >= 0);
 	}
 

@@ -106,17 +106,6 @@ public class LineTest{
 	}
 
 	/**
-	 *  Verification that if the software is running, the line is working
-	 */
-	@Test
-	public void testIsWorking() {
-		LineController lineController = new LineController(100);
-		lineController.run();
-		lineController.stopTrains();
-		assertTrue(line.isWorking());
-	}
-
-	/**
 	 *  Verification that the line has the right number of passengers
 	 */
 	@Test

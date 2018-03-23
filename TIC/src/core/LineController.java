@@ -97,6 +97,7 @@ public class LineController extends Observable implements Runnable {
 		setChanged();
 		notifyObservers(); 
 		stopTrains(); // We stop the current trains on the line
+		clock.close();
 	}
 	
 	/**
@@ -206,6 +207,10 @@ public class LineController extends Observable implements Runnable {
 	
 	public void setDuration(int duration){
 		this.duration = duration;
+	}
+	
+	public Clock getClock(){
+		return clock;
 	}
 
 }
