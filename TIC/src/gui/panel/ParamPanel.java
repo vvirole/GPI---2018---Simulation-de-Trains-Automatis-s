@@ -102,7 +102,6 @@ public class ParamPanel extends JPanel {
 	}
 	
 	
-	
 	private void initComponents(){
 		
 		/************************ PANELS **************************/
@@ -183,13 +182,13 @@ public class ParamPanel extends JPanel {
 		jsIncidentRatio.setBackground(Color.WHITE);
 		jsIncidentRatio.setValue(2);
 		
-		jsTrainBasicSpeed = new JSlider(JSlider.HORIZONTAL, 0, 10, 0);
+		jsTrainBasicSpeed = new JSlider(JSlider.HORIZONTAL, 0, 5, 0);
 		jsTrainBasicSpeed.setPaintTicks(true);
 		jsTrainBasicSpeed.setPaintLabels(true);
 		jsTrainBasicSpeed.setMinorTickSpacing(1);
-		jsTrainBasicSpeed.setMajorTickSpacing(2);
+		jsTrainBasicSpeed.setMajorTickSpacing(1);
 		jsTrainBasicSpeed.setBackground(Color.WHITE);
-		jsTrainBasicSpeed.setValue(5);
+		jsTrainBasicSpeed.setValue(2);
 		
 		
 		/*********************** POSITIONS *******************************/
@@ -285,7 +284,7 @@ public class ParamPanel extends JPanel {
 	 * 
 	 */
 	private void applyParam(){
-		GUIConstants.MAX_DURATION					= Integer.parseInt(jtfTimeofSimulation.getText()) * 3600;
+		GUIConstants.MAX_DURATION					= (int) (Float.parseFloat(jtfTimeofSimulation.getText()) * 3600);
 		Constants.INITIAL_PASSENGER_STATION 		= Integer.parseInt(jtfInitPassenger.getText());
 		Constants.SHORT_TRAIN_CAPACITY				= Integer.parseInt(jtfNbShortTrain.getText());
 		Constants.LONG_TRAIN_CAPACITY				= Integer.parseInt(jtfNbLongTrain.getText());

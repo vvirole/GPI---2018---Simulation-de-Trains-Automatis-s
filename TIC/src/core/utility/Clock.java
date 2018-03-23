@@ -1,27 +1,27 @@
 package core.utility;
 
-public class Clock {
-	
-	private int day;
-	private int hours;
-	private int minute;
-	private int seconde;
-	private int counter;
-	
+import gui.GUIConstants;
+
+public class Clock extends Thread {
 	
 	private static Clock instance;
 	
-	public Clock(int hours) {
-		this.day = 0;
-		this.hours = hours;
-		this.minute = 0;
-		this.seconde = 0;
+	private int day;
+	private int seconde;
+	private int minute;
+	private int hour;
+	private int counter;
+	
+	// Run or stop the counter
+	private boolean running = false;
+	private boolean stop = false;
+	
+	private Clock(){
+		hour = GUIConstants.START_HOUR;
 	}
 	
-	public static Clock newInstance(int hours) {
-		if(instance == null) {
-			instance = new Clock(hours);
-		}
+	public static Clock newInstance(){
+		instance = new Clock();
 		return instance;
 	}
 	
@@ -29,65 +29,124 @@ public class Clock {
 		return instance;
 	}
 	
-	public void incrementClock() {
+	@Override
+	public void run(){
+		while (!stop){
+			try {
+				Thread.sleep(GUIConstants.TIME_SPEED);
+				if (running){
+					increment();
+				}
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	/**
+	 * Stop definetely the clock
+	 */
+	public void close(){
+		stop = true;
+	}
+
+	/**
+	 * Increment the clock by one second
+	 */
+	public void increment(){	
+		seconde++;
+		counter++;
 		
-		seconde+=30;
-		counter+=30;
-		
-		if(seconde >= 60) {
+		if (seconde == 60){
 			seconde = 0;
 			minute++;
 		}
 		
-		if(minute == 60) {
+		if (minute == 60){
 			minute = 0;
-			hours++;
+			hour++;
 		}
 		
-		if(hours == 24) {
-			hours = 0;
+		if (hour == 24){
+			hour = 0;
 			day++;
 		}
 	}
 	
+	/**
+	 * @return the number of hours elapsed
+	 */
+	public int getElapsedHour(){
+		return counter/3600;
+	}
+	
+	/**
+	 * @return the number of minutes elapsed
+	 */
+	public int getElapsedMinute(){
+		return counter/60;
+	}
+	
+	/**
+	 * @return the number of secondes elapsed
+	 */
+	public int getElapsedSeconde(){
+		return counter;
+	}
+
 	public int getDay() {
 		return day;
-	}
-
-	public void setDay(int day) {
-		this.day = day;
-	}
-
-	public int getHours() {
-		return hours;
-	}
-
-	public void setHours(int hours) {
-		this.hours = hours;
-	}
-
-	public int getMinute() {
-		return minute;
-	}
-
-	public void setMinute(int minute) {
-		this.minute = minute;
 	}
 
 	public int getSeconde() {
 		return seconde;
 	}
 
+	public int getMinute() {
+		return minute;
+	}
+
+	public int getHour() {
+		return hour;
+	}
+
+	public int getCounter() {
+		return counter;
+	}
+
+	public void setDay(int day) {
+		this.day = day;
+	}
+
 	public void setSeconde(int seconde) {
 		this.seconde = seconde;
 	}
-	
-	public int getCounter() {
-		return seconde;
+
+	public void setMinute(int minute) {
+		this.minute = minute;
+	}
+
+	public void setHour(int hour) {
+		this.hour = hour;
+	}
+
+	public void setCounter(int counter) {
+		this.counter = counter;
 	}
 	
-	public String toString() {
-		return hours + ":" + minute + ":" + seconde + " Jours : " + day;
+	public boolean isRunning(){
+		return running;
 	}
 	
+	public void setRunning(boolean running){
+		this.running = running;
+	}
+	
+	@Override
+	public String toString(){
+		String hourS = (hour < 10) ? "0" + hour : String.valueOf(hour);
+		String minuteS = (minute < 10) ? "0" + minute : String.valueOf(minute);
+		String secondeS = (seconde < 10) ? "0" + seconde : String.valueOf(seconde);
+		return "Jour " + day + ", " + hourS + ":" + minuteS + ":" + secondeS;
+	}
 }

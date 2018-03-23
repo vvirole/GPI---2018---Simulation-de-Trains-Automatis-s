@@ -9,7 +9,6 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.Insets;
-import java.awt.Panel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Observable;
@@ -163,17 +162,18 @@ public class SimulationPanel extends JPanel implements Observer {
 	}
 	
 	/**
-	 * Update the render of this panel when he receives a notification
+	 * Update the render of this panel when he receives a notification.
 	 * @param obervable 
 	 * @param object
 	 */
 	@Override
 	public void update(Observable observable, Object object) {
-		if (controller.getTime() <= GUIConstants.MAX_DURATION) {
+		if (controller.getTime() <= GUIConstants.MAX_DURATION){
 			jlTurn.setText(Clock.getInstance().toString());
 			dashboardPanel.repaint();
 		}
 		else {
+			line.setWorking(false);
 			gui.GUIFrame.setCurrentPanel(Panels.STATISTICS);
 		}
 	}
@@ -191,6 +191,7 @@ public class SimulationPanel extends JPanel implements Observer {
 			if (!line.isWorking()){
 				simulationThread = new Thread(controller);
 				simulationThread.start();
+				Clock.getInstance().setRunning(true);
 			}
 		}
 	}
@@ -202,6 +203,7 @@ public class SimulationPanel extends JPanel implements Observer {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			line.setWorking(false);
+			Clock.getInstance().setRunning(false);
 		}
 	}
 		
@@ -212,6 +214,7 @@ public class SimulationPanel extends JPanel implements Observer {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			line.setWorking(false);
+			Clock.getInstance().close();
 			gui.GUIFrame.setCurrentPanel(Panels.STATISTICS);
 		}
 	}

@@ -58,7 +58,7 @@ public class SimulationDashboard extends JPanel {
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D) g;
-		jlPeriod.updateUI(); // A VERIFIER => DOIT MODIFIER LA PERIODE
+		jlPeriod.setText("Période : " + line.getPeriod());
 		LinePrinter.printLine(line, g2);
 		LinePrinter.printTrains(line.getTrains(), g2);
 	}

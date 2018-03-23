@@ -46,11 +46,43 @@ public class Line {
 	public Line(String name, int length) {
 		this.name = name;
 		this.length = length;
+		updatePeriod(GUIConstants.START_HOUR);
 	}
 	
 	// ===========================================================================
 	//							GENERAL PART
 	// ===========================================================================
+	
+	/**
+	 * Update the period
+	 */
+	public void updatePeriod(int hour) {
+		switch (hour){
+			case 7 :
+			case 8 :
+			case 9 :
+			case 17 :
+			case 18 :
+			case 19 : 
+			case 20 : 
+					setPeriod(Line.PERIOD_FULL); 
+					break;
+			
+			case 10 :
+			case 11 : 
+			case 12 :
+			case 13 :
+			case 14 :
+			case 15 :
+			case 16 :
+					setPeriod(Line.PERIOD_NORMAL); 
+					break;
+			
+			default : 
+					setPeriod(Line.PERIOD_VOID); 
+					break;
+		}
+	}
 	
 	/**
 	 * Get a canton by the position of a train on the line
@@ -68,6 +100,30 @@ public class Line {
 	}
 	
 	/**
+	 * Get a canton by the id
+	 * @param id
+	 * @return the canton
+	 */
+	public Canton getCantonById(int id) throws TerminusException{
+		int i=0;
+		for (Canton canton : cantons) {
+			i++;
+			if (i == id) {
+				return canton;
+			}
+		}
+		throw new TerminusException();
+	}
+	
+	/**
+	 * Get the list of available Canton
+	 * @return a list of Canton
+	 */
+	public List<Canton> getCantonList(){
+		return cantons;
+	}
+	
+	/**
 	 * Get the list of available stations
 	 * @return a list of stations
 	 */
@@ -77,6 +133,17 @@ public class Line {
 			stations.add(canton.getStation());
 		}
 		return stations;
+	}
+	
+	
+	
+	
+	
+	/**
+	 * @return the terminus station of the line
+	 */
+	public Station getTerminus(){
+		return cantons.get(getNbCanton() - 1).getStation();
 	}
 	
 	/**
