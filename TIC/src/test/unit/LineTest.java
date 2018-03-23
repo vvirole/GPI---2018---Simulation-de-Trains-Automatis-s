@@ -3,6 +3,8 @@ package test.unit;
 import static org.junit.Assert.*;
 
 import java.io.File;
+import java.util.Observable;
+import java.util.Observer;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -15,7 +17,7 @@ import core.entity.Line;
 import core.entity.Station;
 import core.entity.Train;
 import core.xml.UnvalidFileException;
-
+import gui.GUIConstants;
 
 /**
  * @author RE Thomas
@@ -37,7 +39,7 @@ public class LineTest{
 	}
 	
 	/**
-	 *  Verification that in the event of an infrastructure accident on the line in normal period, this one realizes it
+	 *  Vérification qu'en cas d'accident d'infrastructure sur la ligne en periode normale, celle-ci s'en rends bien compte
 	 */
 	@Test
 	public void testHasIncidentInfrastructurePeriodeNormal() {
@@ -47,7 +49,7 @@ public class LineTest{
 	}
 	
 	/**
-	 *  Verification that in the event of an infrastructure accident on the line in void period, this one realizes it
+	 *  Vérification qu'en cas d'accident d'infrastructure sur la ligne en periode normale, celle-ci s'en rends bien compte
 	 */
 	@Test
 	public void testHasIncidentInfrastructurePeriodeVoid() {
@@ -57,7 +59,7 @@ public class LineTest{
 	}
 	
 	/**
-	 *  Verification that in the event of an infrastructure accident on the line in full period, this one realizes it
+	 *  Vérification qu'en cas d'accident d'infrastructure sur la ligne en periode normale, celle-ci s'en rends bien compte
 	 */
 	@Test
 	public void testHasIncidentInfrastructurePeriodeFull() {
@@ -68,8 +70,7 @@ public class LineTest{
 	
 	
 	/**
-	 * Verification that in the event of a passenger accident on the line, it is well aware
-	 */
+	 * Vérification qu'en cas d'accident de passager sur la ligne, celle-ci s'en rends bien compte**/
 	@Test
 	public void testHasIncidentPassager() {
 		line.newIncident(canton, Incident.PASSENGER_INCIDENT);
@@ -77,7 +78,7 @@ public class LineTest{
 	}
 
 	/**
-	 * Verification that in the event of an accident on a given block, the line is able to identify which
+	 * Vérification qu'en cas d'accident sur un canton donné, la ligne est capable d'identifier lequel
 	 */
 	@Test
 	public void testHasIncidentCanton() {
@@ -87,7 +88,7 @@ public class LineTest{
 	}
 		
 	/**
-	 *  Verification that in case of addition of train on the line, it is on the line
+	 *  Vérification qu'en cas de rajout de train sur la ligne, celui-ci est bien sur la ligne
 	 */
 	@Test
 	public void testAddTrain() {
@@ -97,7 +98,7 @@ public class LineTest{
 	}
 
 	/**
-	 *  Verification that in case of addition of canton on the line, it is on the line
+	 *  Vérification qu'en cas de rajout de canton sur la ligne, celui-ci est bien sur la ligne
 	 */
 	@Test
 	public void testAddCanton() {
@@ -106,7 +107,7 @@ public class LineTest{
 	}
 
 	/**
-	 *  Verification that if the software is running, the line is working
+	 *  Vérification qu'en cas de mise en marche du logiciel, la ligne est bien en fonctionnement
 	 */
 	@Test
 	public void testIsWorking() {
@@ -117,7 +118,7 @@ public class LineTest{
 	}
 
 	/**
-	 *  Verification that the line has the right number of passengers
+	 *  Vérification que la ligne compte bien le bon nombre de passager
 	 */
 	@Test
 	public void testGetTotalPassenger() {

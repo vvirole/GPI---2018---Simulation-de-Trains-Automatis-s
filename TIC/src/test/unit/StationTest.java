@@ -16,14 +16,10 @@ import core.entity.Station;
 import core.entity.Train;
 import core.xml.UnvalidFileException;
 
-/**
- * @author RE Thomas
- */
-
 public class StationTest {
 
 	private Line line;
-	private Canton canton;
+	private Canton canton, canton2;
 	private Station station;
 
 	
@@ -33,10 +29,11 @@ public class StationTest {
 		LineBuilder.buildLine(file);
 		line = Line.getInstance();
 		canton = line.getCanton(0);
+		canton2 = line.getCanton(1);
 	}
 	
 	/**
-	 *  Verifying that in case of arrival of empty train, the station decreases in passenger
+	 *  vérification qu'en cas d'arriver de train vide, la station diminue en passager
 	 * @throws TerminusException
 	 */
 	@Test
@@ -58,7 +55,7 @@ public class StationTest {
 	
 	
 	/**
-	 *  Verifying that if there is a train in the station when there is already a train in it, the first one can not go there
+	 *  vérification qu'en cas d'arriver de train dans la station alors qu'il y a deja un train dedans, le premier ne puisse pas y aller
 	 * @throws TerminusException
 	 */
 	@Test
@@ -72,7 +69,7 @@ public class StationTest {
 	}
 
 	/**
-	 *  Verifying that if there is a train exit from the Station, there is no longer any train in the station
+	 *  Vérification qu'en cas de sortie du train de la Station, il n'y a bien plus de train dans la station
 	 * @throws TerminusException
 	 */
 	@Test
@@ -85,7 +82,7 @@ public class StationTest {
 	}
 	
 	/**
-	 * Verifying the break time according to the period of the line
+	 *  Vérification du temps de pause selon la période de la ligne
 	 */
 	@Test
 	public void testGetPauseDuration(){
@@ -98,7 +95,7 @@ public class StationTest {
 		assertTrue(station.getPauseDuration()<=1500);
 		line.setPeriod("pleine");
 		assertTrue(station.getPauseDuration()>=1000);
-		assertTrue(station.getPauseDuration()<=1500);
+		assertTrue(station.getPauseDuration()<=1666);
 		
 	}
 

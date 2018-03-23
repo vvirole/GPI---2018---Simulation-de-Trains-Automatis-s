@@ -9,6 +9,7 @@ import core.entity.Incident;
 import core.entity.Line;
 import core.entity.Station;
 import core.entity.Train;
+import core.utility.Clock;
 import core.utility.DataStorage;
 import core.utility.RandomUtility;
 import gui.GUIConstants;
@@ -29,15 +30,17 @@ public class LineController extends Observable implements Runnable {
 	// Max duration of the simulation
 	private int duration = GUIConstants.MAX_DURATION;
 	
-	// Current cycle of the simulation
-	private int time = 0;
+	// Clock of the simulation
+	private Clock clock;
 	
 	public LineController(int duration) {
 		this.duration = duration;
+		this.clock = Clock.newInstance(GUIConstants.START_HOURS);
 	}
 	
 	public LineController(Observer observer){
 		addObserver(observer);
+		this.clock = Clock.newInstance(GUIConstants.START_HOURS);
 	}
 
 	@Override
@@ -47,8 +50,8 @@ public class LineController extends Observable implements Runnable {
 		line.setWorking(true);
 		runTrains();
 	
-		while(line.isWorking() && time <= duration){
-			if (time % Constants.ARRIVAL_TRAIN_UNIT == 0){
+		while(line.isWorking() && clock.getCounter() <= duration){
+			if (clock.getCounter() % Constants.ARRIVAL_TRAIN_UNIT == 0){
 				Canton startCanton = line.getCantons().get(0);
 				if (startCanton.isFree() && !startCanton.hasIncident()){
 					String currentPeriod = line.getPeriod();
@@ -81,7 +84,7 @@ public class LineController extends Observable implements Runnable {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			time++;
+			clock.incrementClock();
 		}
 		// We stop the current trains on the line
 		stopTrains();
@@ -110,18 +113,14 @@ public class LineController extends Observable implements Runnable {
 	 * Stop the traffic on the line
 	 */
 	public void stopTrains(){
-		for (Train train : line.getTrains()){
-			train.setRunning(false);
-		}
+		line.getTrains().forEach(train -> train.setRunning(false));
 	}
 	
 	/**
 	 * Run the traffic on the line
 	 */
 	public void runTrains(){
-		for (Train train : line.getTrains()){
-			train.setRunning(true);
-		}
+		line.getTrains().forEach(train -> train.setRunning(true));
 	}
 	
 	/*********************************************************************/
@@ -130,7 +129,7 @@ public class LineController extends Observable implements Runnable {
 	 * @return the current cycle of simulation
 	 */
 	public int getTime(){
-		return time;
+		return clock.getCounter();
 	}
 	
 	public void setDuration(int duration){

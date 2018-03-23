@@ -12,9 +12,6 @@ import core.utility.RandomUtility;
 
 public class UtilityTest {
 
-	/**
-	 * test to obtain a random number
-	 */
 	@Test
 	public void testRand() {
 		int min = 0, max = 100;
