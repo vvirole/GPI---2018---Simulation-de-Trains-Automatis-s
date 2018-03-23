@@ -10,42 +10,42 @@
             <nameStation>Nanterre</nameStation>
             <crowdLevel>50</crowdLevel>
             <maxPassengers>500</maxPassengers>
-            <reserveTrain>2</reserveTrain>
+            <reserveTrain>4</reserveTrain>
         </station>
 
         <station id="1">
             <nameStation>La Défense</nameStation>
             <crowdLevel>75</crowdLevel>
             <maxPassengers>800</maxPassengers>
-            <reserveTrain>3</reserveTrain>
+            <reserveTrain>6</reserveTrain>
         </station>
 
         <station id="2">
             <nameStation>Auber</nameStation>
             <crowdLevel>60</crowdLevel>
             <maxPassengers>650</maxPassengers>
-            <reserveTrain>3</reserveTrain>
+            <reserveTrain>7</reserveTrain>
         </station>
 
         <station id="3">
             <nameStation>Gare de Lyon</nameStation>
             <crowdLevel>40</crowdLevel>
             <maxPassengers>350</maxPassengers>
-            <reserveTrain>2</reserveTrain>
+            <reserveTrain>4</reserveTrain>
         </station>
 
         <station id="4">
             <nameStation>Nation</nameStation>
             <crowdLevel>30</crowdLevel>
             <maxPassengers>250</maxPassengers>
-            <reserveTrain>2</reserveTrain>
+            <reserveTrain>3</reserveTrain>
         </station>
 
         <station id="5">
             <nameStation>Vincennes</nameStation>
             <crowdLevel>50</crowdLevel>
             <maxPassengers>300</maxPassengers>
-            <reserveTrain>2</reserveTrain>
+            <reserveTrain>3</reserveTrain>
         </station>
 
     </stations>

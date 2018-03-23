@@ -29,6 +29,8 @@ public class Station {
 	
 	//The train in the Station
 	private volatile Train arrivalTrain = null;
+	
+	/*******************************************************************/
 
 	public Station(String name, int position, int maxPassengers, int numReserveTrain, int crowdLevel) {
 		this.name = name;
@@ -36,12 +38,10 @@ public class Station {
 		this.maxPassengers = maxPassengers;
 		this.numReserveTrain = numReserveTrain;
 		this.crowdLevel = crowdLevel;
-		if (maxPassengers < Constants.INITIAL_PASSENGER_STATION){
+		if (maxPassengers < Constants.INITIAL_PASSENGER_STATION)
 			this.currentPassenger = maxPassengers;
-		}
-		else {
+		else
 			this.currentPassenger = Constants.INITIAL_PASSENGER_STATION;
-		}
 	}
 	
 	public synchronized void enter(Train train) throws TerminusException {
@@ -69,6 +69,12 @@ public class Station {
 				
 				if (currentPassenger > maxPassengers){
 					currentPassenger = maxPassengers;
+				}
+				
+				if (satisfaction < 100){
+					satisfaction++;
+					if (satisfaction > 100)
+						satisfaction = 100;
 				}
 				
 				if (isTerminus()){
@@ -112,20 +118,20 @@ public class Station {
 		switch(line.getPeriod()){
 			case Line.PERIOD_FULL :
 				if (!isTerminus())
-					newPassenger = RandomUtility.rand(0, maxPassengers/5);
-				leavePassenger = RandomUtility.rand(0, maxPassengers/20);
+					newPassenger = RandomUtility.rand(0, 40);
+				leavePassenger = RandomUtility.rand(0, 20);
 				break;
 				
 			case Line.PERIOD_VOID :
 				if (!isTerminus())
-					newPassenger = RandomUtility.rand(0, maxPassengers/30);
-				leavePassenger = RandomUtility.rand(0, maxPassengers/20);
+					newPassenger = RandomUtility.rand(0, 20);
+				leavePassenger = RandomUtility.rand(0, 10);
 				break;
 				
 			case Line.PERIOD_NORMAL :
 				if (!isTerminus())
-					newPassenger = RandomUtility.rand(0, maxPassengers/20);
-				leavePassenger = RandomUtility.rand(0, maxPassengers/20);
+					newPassenger = RandomUtility.rand(0, 10);
+				leavePassenger = RandomUtility.rand(0, 5);
 				break;
 				
 			default : break;
@@ -156,15 +162,33 @@ public class Station {
 	 * Update the satisfaction level of the station
 	 */
 	public void updateSatisfaction(){
-		if (currentPassenger > maxPassengers/2){
-			if (satisfaction > 1) satisfaction -= 2;
+		if (currentPassenger > 0){
+			if (currentPassenger > maxPassengers/2){
+				satisfaction--;
+			}	
+			if (Line.getInstance().hasIncident()){
+				satisfaction--;
+				if (Line.getInstance().hasIncident(this)){
+					satisfaction--;
+				}
+			}
+			else {
+				satisfaction++;
+			}
+			
+			if (satisfaction > 100) satisfaction = 100;
+			if (satisfaction < 0) satisfaction = 0;
 		}
-		if (Line.getInstance().hasIncident()){
-			if (satisfaction > 0) satisfaction--;
-		}
-		else {
-			if (satisfaction < 100) satisfaction++;
-		}
+	}
+	
+	public void incrementSatisfaction(){
+		if (satisfaction < 100)
+			satisfaction++;
+	}
+	
+	public void decrementSatisfaction(){
+		if (satisfaction > 0)
+			satisfaction--;
 	}
 	
 	/**
@@ -186,6 +210,35 @@ public class Station {
 	 */
 	public boolean isTerminus(){
 		return Line.getInstance().getTerminus().equals(this);
+	}
+	
+	/**
+	 * Use a reserve train if there are still reserve trains
+	 */
+	public void useReserveTrain(){
+		if (numReserveTrain > 0)
+			numReserveTrain--;
+	}
+	
+	/**
+	 * @return if there are still available reserve trains
+	 */
+	public boolean hasAvailableReserveTrain(){
+		return numReserveTrain > 0;
+	}
+	
+	/**
+	 * @return if there are no train into the station
+	 */
+	public boolean isFree(){
+		return arrivalTrain == null;
+	}
+	
+	/**
+	 * @return if there is an incident on this station
+	 */
+	public boolean hasIncident(){
+		return Line.getInstance().hasIncident(this);
 	}
 		
 	

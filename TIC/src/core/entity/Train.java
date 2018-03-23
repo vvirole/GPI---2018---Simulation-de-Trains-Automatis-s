@@ -87,7 +87,13 @@ public class Train extends Thread {
 				}
 				if (currentCanton.hasIncident()){
 					Incident incident = line.getIncident(currentCanton);
-					if (!incident.isLocatedBefore(this)) break;
+					if (!incident.isLocatedBefore(this)) {
+						currentCanton.setTrainBlocked(true);
+						break;
+					}
+				}
+				else {
+					currentCanton.setTrainBlocked(false);
 				}
 				if (currentPosition + speed >= currentCanton.getEndPoint()) {
 					try {

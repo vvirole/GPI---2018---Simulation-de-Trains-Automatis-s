@@ -180,7 +180,7 @@ public class ParamPanel extends JPanel {
 		jsIncidentRatio.setMinorTickSpacing(1);
 		jsIncidentRatio.setMajorTickSpacing(1);
 		jsIncidentRatio.setBackground(Color.WHITE);
-		jsIncidentRatio.setValue(2);
+		jsIncidentRatio.setValue(3);
 		
 		jsTrainBasicSpeed = new JSlider(JSlider.HORIZONTAL, 0, 5, 0);
 		jsTrainBasicSpeed.setPaintTicks(true);
@@ -188,7 +188,7 @@ public class ParamPanel extends JPanel {
 		jsTrainBasicSpeed.setMinorTickSpacing(1);
 		jsTrainBasicSpeed.setMajorTickSpacing(1);
 		jsTrainBasicSpeed.setBackground(Color.WHITE);
-		jsTrainBasicSpeed.setValue(2);
+		jsTrainBasicSpeed.setValue(3);
 		
 		
 		/*********************** POSITIONS *******************************/

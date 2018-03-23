@@ -92,11 +92,32 @@ public class Line {
 	 */
 	public Canton getCantonByPosition(int position) throws TerminusException {
 		for (Canton canton : cantons) {
-			if (canton.getEndPoint() > position) {
+			if (canton.getEndPoint() >= position) {
 				return canton;
 			}
 		}
 		throw new TerminusException();
+	}
+	
+	/**
+	 * Get a canton by the id
+	 * @param id
+	 * @return the canton
+	 */
+	public Canton getCantonById(String id) {
+		for (Canton canton : cantons) {
+			if (canton.getId().equals(id))
+				return canton;
+		}
+		return null;
+	}
+	
+	/**
+	 * Get the list of available Canton
+	 * @return a list of Canton
+	 */
+	public List<Canton> getCantonList(){
+		return cantons;
 	}
 	
 	/**
@@ -198,6 +219,22 @@ public class Line {
 	}
 	
 	/**
+	 * Verify if a station has incident or not
+	 * @param station on the line
+	 * @return true if there is an incident, else false 
+	 */
+	public boolean hasIncident(Station station){
+		for (Entry<Incident, Integer> entry : incidents.entrySet()){
+			// Position of the incident on the line
+			int position = entry.getKey().getLocation();
+			if (position == station.getPosition()){
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/**
 	 * Get the incident happened on a canton
 	 * @param canton on the line
 	 * @return the incident if the canton has one, or null if he hasn't
@@ -275,7 +312,6 @@ public class Line {
 	public ConcurrentHashMap<Incident, Integer> listIncidents() {
 		return incidents;
 	} 
-	
 	
 	// ======================================================================
 	//						STANDARD GETTERS & SETTERS
