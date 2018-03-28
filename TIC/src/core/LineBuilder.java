@@ -75,7 +75,6 @@ public class LineBuilder {
 		// We create the line and add the cantons
 		String nameLine = parser.getTextNode("nameLine");
 		Line line = new Line(nameLine, usedLength);
-		//cantonList.forEach(canton -> line.addCanton(canton));
 		for (Canton canton : cantonList){
 			line.addCanton(canton);
 		}

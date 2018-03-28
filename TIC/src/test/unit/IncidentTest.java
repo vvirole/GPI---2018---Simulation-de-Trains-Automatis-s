@@ -3,7 +3,6 @@ package test.unit;
 import static org.junit.Assert.*;
 
 import java.io.File;
-import java.util.Map.Entry;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -14,6 +13,10 @@ import core.entity.Incident;
 import core.entity.Line;
 import core.entity.Train;
 import core.xml.UnvalidFileException;
+
+/**
+ * @author RE Thomas
+ */
 
 public class IncidentTest {
 
@@ -32,25 +35,25 @@ public class IncidentTest {
 	
 	
 	/**
-	 * Verification du temps de résolution d'un accident
+	 * Verifying of the resolution's time of an accident
 	 */
 	@Test
 	public void testGetTimeToResolve() {
 		line.newIncident(canton, 0);
 		Incident incident = line.getIncident(canton);
 		line.setPeriod("creuse");
-		assertTrue(incident.getTimeToResolve()>=100);
-		assertTrue(incident.getTimeToResolve()<=200);
+		assertTrue(incident.getTimeToResolve()>=125);
+		assertTrue(incident.getTimeToResolve()<=250);
 		line.setPeriod("normale");
-		assertTrue(incident.getTimeToResolve()>=100);
-		assertTrue(incident.getTimeToResolve()<=300);
+		assertTrue(incident.getTimeToResolve()>=187);
+		assertTrue(incident.getTimeToResolve()<=313);
 		line.setPeriod("pleine");
-		assertTrue(incident.getTimeToResolve()>=200);
-		assertTrue(incident.getTimeToResolve()<=300);
+		assertTrue(incident.getTimeToResolve()>=250);
+		assertTrue(incident.getTimeToResolve()<=375);
 	}
 	
 	/**
-	 * Vérification que la ligne sache qu'un train est avant ou apres un accident
+	 * Verifying that the line knows that a train is before or after an accident
 	 */
 	
 	@Test

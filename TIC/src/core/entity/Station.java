@@ -29,6 +29,8 @@ public class Station {
 	
 	//The train in the Station
 	private volatile Train arrivalTrain = null;
+	
+	/*******************************************************************/
 
 	public Station(String name, int position, int maxPassengers, int numReserveTrain, int crowdLevel) {
 		this.name = name;
@@ -36,12 +38,10 @@ public class Station {
 		this.maxPassengers = maxPassengers;
 		this.numReserveTrain = numReserveTrain;
 		this.crowdLevel = crowdLevel;
-		if (maxPassengers < Constants.INITIAL_PASSENGER_STATION){
+		if (maxPassengers < Constants.INITIAL_PASSENGER_STATION)
 			this.currentPassenger = maxPassengers;
-		}
-		else {
+		else
 			this.currentPassenger = Constants.INITIAL_PASSENGER_STATION;
-		}
 	}
 	
 	public synchronized void enter(Train train) throws TerminusException {
@@ -61,11 +61,25 @@ public class Station {
 				
 				// New passengers on the train
 				int nbDest = arrivalTrain.getDestination().size();
-				int nbNewPassengers = 0;
 				if (nbDest > 0){
-					nbNewPassengers = RandomUtility.rand(0, currentPassenger/nbDest);
+					int nbNewPassengers = RandomUtility.rand(0, currentPassenger/nbDest);
 					currentPassenger -= nbNewPassengers;
 					currentPassenger += arrivalTrain.addPassengers(nbNewPassengers);
+				}
+				
+				if (currentPassenger > maxPassengers){
+					currentPassenger = maxPassengers;
+				}
+				
+				if (satisfaction < 100){
+					satisfaction++;
+					if (satisfaction > 100)
+						satisfaction = 100;
+				}
+				
+				if (isTerminus()){
+					exit();
+					throw new TerminusException();
 				}
 				
 				System.out.println(arrivalTrain);
@@ -93,9 +107,83 @@ public class Station {
 	
 	/**
 	 * Somes passengers arrive into the station and somes leave the station
+	 * according to the period of journey
 	 */
 	public void updatePassengers(){
+		Line line = Line.getInstance();
+		int newPassenger = 0, leavePassenger = 0;
 		
+		if (currentPassenger == 0) return;
+		
+		switch(line.getPeriod()){
+			case Line.PERIOD_FULL :
+				if (!isTerminus())
+					newPassenger = RandomUtility.rand(0, 40);
+				leavePassenger = RandomUtility.rand(0, 20);
+				break;
+				
+			case Line.PERIOD_VOID :
+				if (!isTerminus())
+					newPassenger = RandomUtility.rand(0, 20);
+				leavePassenger = RandomUtility.rand(0, 10);
+				break;
+				
+			case Line.PERIOD_NORMAL :
+				if (!isTerminus())
+					newPassenger = RandomUtility.rand(0, 10);
+				leavePassenger = RandomUtility.rand(0, 5);
+				break;
+				
+			default : break;
+		}
+		
+		if (isTerminus()){
+			 leavePassenger = currentPassenger ;
+		}	
+		
+		int futurePassenger = currentPassenger + newPassenger - leavePassenger;
+		if (futurePassenger < 0){
+			currentPassenger = 0;
+		}
+		else if (futurePassenger > maxPassengers){
+			currentPassenger = maxPassengers;
+		}
+		else {
+			currentPassenger = futurePassenger;
+		}
+	}
+	
+	/**
+	 * Update the satisfaction level of the station
+	 */
+	public void updateSatisfaction(){
+		if (currentPassenger > 0){
+			if (currentPassenger > maxPassengers/2){
+				satisfaction--;
+			}	
+			if (Line.getInstance().hasIncident()){
+				satisfaction--;
+				if (Line.getInstance().hasIncident(this)){
+					satisfaction--;
+				}
+			}
+			else {
+				satisfaction++;
+			}
+			
+			if (satisfaction > 100) satisfaction = 100;
+			if (satisfaction < 0) satisfaction = 0;
+		}
+	}
+	
+	public void incrementSatisfaction(){
+		if (satisfaction < 100)
+			satisfaction++;
+	}
+	
+	public void decrementSatisfaction(){
+		if (satisfaction > 0)
+			satisfaction--;
 	}
 	
 	/**
@@ -107,9 +195,45 @@ public class Station {
 		switch(line.getPeriod()){
 			case Line.PERIOD_VOID : 	return RandomUtility.rand(defaultTime/3, defaultTime);
 			case Line.PERIOD_NORMAL : 	return RandomUtility.rand(defaultTime/2, (3 * defaultTime)/2);
-			case Line.PERIOD_FULL : 	return RandomUtility.rand(defaultTime, (3 * defaultTime)/2);
+			case Line.PERIOD_FULL : 	return RandomUtility.rand(defaultTime, (5 * defaultTime)/3);
 			default : 					return defaultTime;
 		}
+	}
+	
+	/**
+	 * @return true if the station is the terminus of the line, false else
+	 */
+	public boolean isTerminus(){
+		return Line.getInstance().getTerminus().equals(this);
+	}
+	
+	/**
+	 * Use a reserve train if there are still reserve trains
+	 */
+	public void useReserveTrain(){
+		if (numReserveTrain > 0)
+			numReserveTrain--;
+	}
+	
+	/**
+	 * @return if there are still available reserve trains
+	 */
+	public boolean hasAvailableReserveTrain(){
+		return numReserveTrain > 0;
+	}
+	
+	/**
+	 * @return if there are no train into the station
+	 */
+	public boolean isFree(){
+		return arrivalTrain == null;
+	}
+	
+	/**
+	 * @return if there is an incident on this station
+	 */
+	public boolean hasIncident(){
+		return Line.getInstance().hasIncident(this);
 	}
 		
 	

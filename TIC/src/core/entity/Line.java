@@ -46,11 +46,43 @@ public class Line {
 	public Line(String name, int length) {
 		this.name = name;
 		this.length = length;
+		updatePeriod(GUIConstants.START_HOUR);
 	}
 	
 	// ===========================================================================
 	//							GENERAL PART
 	// ===========================================================================
+	
+	/**
+	 * Update the period
+	 */
+	public void updatePeriod(int hour) {
+		switch (hour){
+			case 7 :
+			case 8 :
+			case 9 :
+			case 17 :
+			case 18 :
+			case 19 : 
+			case 20 : 
+					setPeriod(Line.PERIOD_FULL); 
+					break;
+			
+			case 10 :
+			case 11 : 
+			case 12 :
+			case 13 :
+			case 14 :
+			case 15 :
+			case 16 :
+					setPeriod(Line.PERIOD_NORMAL); 
+					break;
+			
+			default : 
+					setPeriod(Line.PERIOD_VOID); 
+					break;
+		}
+	}
 	
 	/**
 	 * Get a canton by the position of a train on the line
@@ -60,11 +92,32 @@ public class Line {
 	 */
 	public Canton getCantonByPosition(int position) throws TerminusException {
 		for (Canton canton : cantons) {
-			if (canton.getEndPoint() > position) {
+			if (canton.getEndPoint() >= position) {
 				return canton;
 			}
 		}
 		throw new TerminusException();
+	}
+	
+	/**
+	 * Get a canton by the id
+	 * @param id
+	 * @return the canton
+	 */
+	public Canton getCantonById(String id) {
+		for (Canton canton : cantons) {
+			if (canton.getId().equals(id))
+				return canton;
+		}
+		return null;
+	}
+	
+	/**
+	 * Get the list of available Canton
+	 * @return a list of Canton
+	 */
+	public List<Canton> getCantonList(){
+		return cantons;
 	}
 	
 	/**
@@ -77,6 +130,13 @@ public class Line {
 			stations.add(canton.getStation());
 		}
 		return stations;
+	}
+	
+	/**
+	 * @return the terminus station of the line
+	 */
+	public Station getTerminus(){
+		return cantons.get(getNbCanton() - 1).getStation();
 	}
 	
 	/**
@@ -152,6 +212,22 @@ public class Line {
 			// Position of the incident on the line
 			int position = entry.getKey().getLocation();
 			if (position > canton.getStartPoint() && position <= canton.getEndPoint()){
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * Verify if a station has incident or not
+	 * @param station on the line
+	 * @return true if there is an incident, else false 
+	 */
+	public boolean hasIncident(Station station){
+		for (Entry<Incident, Integer> entry : incidents.entrySet()){
+			// Position of the incident on the line
+			int position = entry.getKey().getLocation();
+			if (position == station.getPosition()){
 				return true;
 			}
 		}
@@ -236,7 +312,6 @@ public class Line {
 	public ConcurrentHashMap<Incident, Integer> listIncidents() {
 		return incidents;
 	} 
-	
 	
 	// ======================================================================
 	//						STANDARD GETTERS & SETTERS

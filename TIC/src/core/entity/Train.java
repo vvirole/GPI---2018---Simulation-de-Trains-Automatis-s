@@ -25,7 +25,7 @@ public class Train extends Thread {
 	private Canton currentCanton;
 	
 	//Current position in the Canton
-	private int currentPosition = 0;
+	private int currentPosition;
 	
 	//Type of the train
 	private int type;
@@ -53,6 +53,7 @@ public class Train extends Thread {
 		this.currentPassenger = currentPassenger;
 		this.speed = speed;
 		this.type = type;
+		this.currentPosition = currentCanton.getStartPoint();
 		currentCanton.enter(this);
 		
 		// Initialisation of the map destination 
@@ -86,7 +87,13 @@ public class Train extends Thread {
 				}
 				if (currentCanton.hasIncident()){
 					Incident incident = line.getIncident(currentCanton);
-					if (!incident.isLocatedBefore(this)) break;
+					if (!incident.isLocatedBefore(this)) {
+						currentCanton.setTrainBlocked(true);
+						break;
+					}
+				}
+				else {
+					currentCanton.setTrainBlocked(false);
 				}
 				if (currentPosition + speed >= currentCanton.getEndPoint()) {
 					try {
