@@ -16,7 +16,7 @@ in the class "Canton" put in the function "enter" a value to wait otherwise the 
  */
 
 @RunWith(Suite.class)
-@SuiteClasses({CantonTest.class, IncidentTest.class, LineBuilderTest.class, LineControllerTest.class, LineTest.class, UtilityTest.class, StationTest.class, TrainTest.class, RandomUtilityTest.class, DataStorageTest.class})
+@SuiteClasses({CantonTest.class, IncidentTest.class, LineControllerTest.class, LineBuilderTest.class, LineTest.class, UtilityTest.class, StationTest.class, TrainTest.class, RandomUtilityTest.class, DataStorageTest.class, ClockTest.class})
 
 
 public class AllTest {

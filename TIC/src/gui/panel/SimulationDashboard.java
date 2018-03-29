@@ -1,5 +1,6 @@
 package gui.panel;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -12,6 +13,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import core.entity.Line;
+import gui.GUIConstants;
 import gui.LinePrinter;
 
 public class SimulationDashboard extends JPanel {
@@ -61,6 +63,39 @@ public class SimulationDashboard extends JPanel {
 		jlPeriod.setText("Période : " + line.getPeriod());
 		LinePrinter.printLine(line, g2);
 		LinePrinter.printTrains(line.getTrains(), g2);
+		drawInfos(g);
+	}
+
+	/**
+	 * Draw color informations about the trains on the line
+	 * @param g
+	 */
+	private void drawInfos(Graphics g) {
+		int x = 20, y = 20;
+		int w = 150, h = 75;
+		Graphics2D g2 = (Graphics2D) g;
+		
+		// frame
+		g2.setStroke(new BasicStroke(2));
+		g2.drawRect(x, y, w, h);
+		
+		// short trains
+		g2.setColor(GUIConstants.SHORT_TRAIN_COLOR);
+		g2.fillRect(x + 20, y + 10, 10, 15);
+		g2.setColor(Color.black);
+		g2.drawString(": Trains courts", x + 40, y + 20);
+		
+		// long trains
+		g2.setColor(GUIConstants.LONG_TRAIN_COLOR);
+		g2.fillRect(x + 20, y + 30, 10, 15);
+		g2.setColor(Color.black);
+		g2.drawString(": Trains longs", x + 40, y + 40);
+		
+		// reserve trains
+		g2.setColor(GUIConstants.RESERVE_TRAIN_COLOR);
+		g2.fillRect(x + 20, y + 50, 10, 15);
+		g2.setColor(Color.black);
+		g2.drawString(": Trains de réserve", x + 40, y + 60);
 	}
 
 }

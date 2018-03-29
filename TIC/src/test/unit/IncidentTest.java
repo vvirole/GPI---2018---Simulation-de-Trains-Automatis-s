@@ -42,14 +42,14 @@ public class IncidentTest {
 		line.newIncident(canton, 0);
 		Incident incident = line.getIncident(canton);
 		line.setPeriod("creuse");
-		assertTrue(incident.getTimeToResolve()>=100);
-		assertTrue(incident.getTimeToResolve()<=200);
+		assertTrue(incident.getTimeToResolve()>=125);
+		assertTrue(incident.getTimeToResolve()<=250);
 		line.setPeriod("normale");
-		assertTrue(incident.getTimeToResolve()>=100);
-		assertTrue(incident.getTimeToResolve()<=300);
+		assertTrue(incident.getTimeToResolve()>=187);
+		assertTrue(incident.getTimeToResolve()<=313);
 		line.setPeriod("pleine");
-		assertTrue(incident.getTimeToResolve()>=200);
-		assertTrue(incident.getTimeToResolve()<=300);
+		assertTrue(incident.getTimeToResolve()>=250);
+		assertTrue(incident.getTimeToResolve()<=375);
 	}
 	
 	/**

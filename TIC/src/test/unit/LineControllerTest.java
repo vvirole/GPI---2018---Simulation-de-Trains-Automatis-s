@@ -11,7 +11,10 @@ import core.LineBuilder;
 import core.LineController;
 import core.entity.Canton;
 import core.entity.Line;
+import core.entity.Station;
+import core.utility.Clock;
 import core.xml.UnvalidFileException;
+import gui.GUIConstants;
 import core.Constants;
 public class LineControllerTest {
 
@@ -30,24 +33,40 @@ public class LineControllerTest {
 		canton = line.getCanton(0);
 		canton2 = line.getCanton(1);
 	}
+	
 	/**
 	 * verifying the correct resolution of accidents if he has the time to do it
 	 */
 	@Test
-	public void testRun() {
-		Constants.INCIDENT_RATIO=0;
-		for (int i=0; i<=10; i++){
-			line.newIncident(canton, 0);
-			LineController lineController = new LineController(300);
-			lineController.run();
-			assertTrue(line.hasIncident(canton)==false);
-			line.newIncident(canton2, 0);
-			lineController.setDuration(100);
-			lineController.run();
-			assertFalse(line.hasIncident(canton2)==false);
+	public void testIncidentResolution() {
+		line.newIncident(canton, 0);
+		for (int i = 0 ; i < Constants.DEFAULT_INCIDENT_RESOLUTION_TIME * 2 ; i++){
+			line.resolveIncident();
 		}
 	}
-
-
-
+	
+	/**
+	 * verifying the running of the simulation with the controller
+	 */
+	@Test
+	public void testRun(){
+		LineController controller = new LineController(1000);
+		Clock clock = controller.getClock();
+		clock.setRunning(true);
+		controller.run();
+		assertTrue(!clock.isRunning());
+	}
+	
+	@Test
+	public void testThrowReserveTrain(){
+		LineController controller = new LineController(1000);
+		Clock clock = controller.getClock();
+		clock.setRunning(true);
+		Station station = canton.getStation();
+		int nbReserveTrainBefore = station.getNumReserveTrain();
+		controller.throwReserveTrain(canton);
+		assertTrue(nbReserveTrainBefore >= station.getNumReserveTrain());
+		
+		
+	}
 }

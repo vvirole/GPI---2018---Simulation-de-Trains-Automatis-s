@@ -30,32 +30,28 @@ public class DataStorageTest {
 	}
 	
 	@Test
-	public void testGeneral() {
-		dataStorage.addPassengerData(200, 200);
-		assertTrue(dataStorage.getNbPassenger(200)==200);
-		assertFalse(dataStorage.getNbPassenger(200)<200);
-		assertFalse(dataStorage.getNbPassenger(200)>200);
-		
-		assertTrue(dataStorage.getPassengerData().size()==1);
+	public void TestGetTimeIndex(){
+		dataStorage.clear();
+		dataStorage.getTimes().add((float) 100);
+		dataStorage.getTimes().add((float) 200);
+		System.out.println(dataStorage.getTimeIndex(200));
+		System.out.println(dataStorage.getTimeIndex(100));
+		assertTrue(dataStorage.getTimeIndex(100)==0);
+		assertTrue(dataStorage.getTimeIndex(200)==1);
+		assertFalse(dataStorage.getTimeIndex(200)==0);
+		assertFalse(dataStorage.getTimeIndex(300)==0);
+		assertTrue(dataStorage.getTimeIndex(300)==-1);
 	}
 	
 	@Test
-	public void testTimeIncidentData(){
-		dataStorage.addTimeIncidentData(200, 30);
-		assertTrue(dataStorage.getNbIncident(200)==30);
-	}
-	
-	@Test
-	public void testSatisfactionData(){
-		dataStorage.addSatisfactionData(200, 12);
-		assertTrue(dataStorage.getNbSatisfaction(200)==12);
-		assertFalse(dataStorage.getSatisfactionData().size()==1);
-	}
-	
-	@Test
-	public void testClear(){
-		DataStorage.getInstance().clear();
+	public void TestGeneral(){
+		dataStorage.addData(100, 100, 1, 100);
+		assertTrue(dataStorage.getNbPassenger(100)==100);
+		assertTrue(dataStorage.getNbIncident(100)==1);
+		assertTrue(dataStorage.getLevelSatisfaction(100)==100);
+		dataStorage.clear();
 		assertTrue(dataStorage.getPassengerData().size()==0);
+		assertTrue(dataStorage.getIncidentData().size()==0);
 		assertTrue(dataStorage.getSatisfactionData().size()==0);
 	}
 }

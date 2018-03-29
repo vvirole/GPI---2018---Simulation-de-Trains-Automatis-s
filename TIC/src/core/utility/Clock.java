@@ -1,10 +1,12 @@
 package core.utility;
 
+import core.LineController;
 import gui.GUIConstants;
 
 public class Clock extends Thread {
 	
 	private static Clock instance;
+	private static LineController controller;
 	
 	private int day;
 	private int seconde;
@@ -16,12 +18,13 @@ public class Clock extends Thread {
 	private boolean running = false;
 	private boolean stop = false;
 	
-	private Clock(){
+	public Clock(){
 		hour = GUIConstants.START_HOUR;
 	}
 	
-	public static Clock newInstance(){
-		instance = new Clock();
+	public static Clock newInstance(LineController controller){
+		Clock.instance = new Clock();
+		Clock.controller = controller;
 		return instance;
 	}
 	
@@ -36,6 +39,8 @@ public class Clock extends Thread {
 				Thread.sleep(GUIConstants.TIME_SPEED);
 				if (running){
 					increment();
+					if (counter % 300 == 0) controller.update();
+					if (counter % 600 == 0) controller.updateSatisfaction();
 				}
 			} catch (InterruptedException e) {
 				e.printStackTrace();
@@ -48,6 +53,7 @@ public class Clock extends Thread {
 	 */
 	public void close(){
 		stop = true;
+		running = false;
 	}
 
 	/**
@@ -92,6 +98,10 @@ public class Clock extends Thread {
 	 */
 	public int getElapsedSeconde(){
 		return counter;
+	}
+	
+	public float getFormattedTime() {
+		return Float.parseFloat(hour + "." + minute);
 	}
 
 	public int getDay() {

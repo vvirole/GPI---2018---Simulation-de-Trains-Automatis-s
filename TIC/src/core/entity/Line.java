@@ -92,7 +92,7 @@ public class Line {
 	 */
 	public Canton getCantonByPosition(int position) throws TerminusException {
 		for (Canton canton : cantons) {
-			if (canton.getEndPoint() > position) {
+			if (canton.getEndPoint() >= position) {
 				return canton;
 			}
 		}
@@ -104,15 +104,12 @@ public class Line {
 	 * @param id
 	 * @return the canton
 	 */
-	public Canton getCantonById(int id) throws TerminusException{
-		int i=0;
+	public Canton getCantonById(String id) {
 		for (Canton canton : cantons) {
-			i++;
-			if (i == id) {
+			if (canton.getId().equals(id))
 				return canton;
-			}
 		}
-		throw new TerminusException();
+		return null;
 	}
 	
 	/**
@@ -134,10 +131,6 @@ public class Line {
 		}
 		return stations;
 	}
-	
-	
-	
-	
 	
 	/**
 	 * @return the terminus station of the line
@@ -226,6 +219,22 @@ public class Line {
 	}
 	
 	/**
+	 * Verify if a station has incident or not
+	 * @param station on the line
+	 * @return true if there is an incident, else false 
+	 */
+	public boolean hasIncident(Station station){
+		for (Entry<Incident, Integer> entry : incidents.entrySet()){
+			// Position of the incident on the line
+			int position = entry.getKey().getLocation();
+			if (position == station.getPosition()){
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/**
 	 * Get the incident happened on a canton
 	 * @param canton on the line
 	 * @return the incident if the canton has one, or null if he hasn't
@@ -291,6 +300,7 @@ public class Line {
 			Integer remainingTime = entry.getValue();
 			incidents.put(incident, --remainingTime);
 			if (remainingTime == 0){
+				System.out.println("\n => The incident at the position " + incident.getLocation() + " has been resolved.");
 				removeIncident(incident);
 			}
 		}
@@ -303,7 +313,6 @@ public class Line {
 	public ConcurrentHashMap<Incident, Integer> listIncidents() {
 		return incidents;
 	} 
-	
 	
 	// ======================================================================
 	//						STANDARD GETTERS & SETTERS

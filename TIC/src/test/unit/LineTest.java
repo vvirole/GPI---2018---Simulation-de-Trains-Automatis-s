@@ -105,16 +105,16 @@ public class LineTest{
 		assertTrue(line.getCantons().contains(canton3));
 	}
 
-	/**
-	 *  Verification that if the software is running, the line is working
-	 */
 	@Test
-	public void testIsWorking() {
-		LineController lineController = new LineController(100);
-		lineController.run();
-		lineController.stopTrains();
-		assertTrue(line.isWorking());
+	public void testUpdatePeriode(){
+		line.updatePeriod(0);
+		assertTrue(line.getPeriod()=="creuse");
+		line.updatePeriod(7);
+		assertTrue(line.getPeriod()=="pleine");
+		line.updatePeriod(13);
+		assertTrue(line.getPeriod()=="normale");
 	}
+
 
 	/**
 	 *  Verification that the line has the right number of passengers

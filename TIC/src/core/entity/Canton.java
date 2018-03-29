@@ -22,6 +22,7 @@ public class Canton {
 	
 	// Indicate if there is train blocked by an incident
 	private boolean trainBlocked = false;
+
 	
 	public Canton(String id, int startPoint, int length, Station station) {
 		this.id = id;
@@ -62,6 +63,14 @@ public class Canton {
 	 */
 	public boolean isFree(){
 		return (occupyingTrain == null);
+	}
+	
+	/**
+	 * @return if this canton is the last of the line
+	 */
+	public boolean isLastCanton(){
+		Line line = Line.getInstance();
+		return line.getCanton(line.getNbCanton() - 1).equals(this);
 	}
 	
 	/*********************************************************/
@@ -113,6 +122,5 @@ public class Canton {
 	public void setTrainBlocked(boolean trainBlocked) {
 		this.trainBlocked = trainBlocked;
 	}
-	
 	
 }

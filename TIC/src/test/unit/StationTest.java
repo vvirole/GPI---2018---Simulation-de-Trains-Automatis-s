@@ -98,8 +98,73 @@ public class StationTest {
 		assertTrue(station.getPauseDuration()<=1500);
 		line.setPeriod("pleine");
 		assertTrue(station.getPauseDuration()>=1000);
-		assertTrue(station.getPauseDuration()<=1500);
+		assertTrue(station.getPauseDuration()<=1666);
 		
 	}
-
+	
+	@Test
+	public void testUpdatePassager(){
+		station = new Station(null, 0, 100, 0, 0);
+		station.setCurrentPassenger(20);
+		line.setPeriod("creuse");
+		station.updatePassengers();
+		assertTrue(station.getCurrentPassenger()<=40);
+		assertTrue(station.getCurrentPassenger()>=10);
+		station.setCurrentPassenger(20);
+		line.setPeriod("normale");
+		station.updatePassengers();
+		assertTrue(station.getCurrentPassenger()<=30);
+		assertTrue(station.getCurrentPassenger()>=15);
+		station.setCurrentPassenger(20);
+		line.setPeriod("pleine");
+		station.updatePassengers();
+		assertTrue(station.getCurrentPassenger()<=60);
+		assertTrue(station.getCurrentPassenger()>=0);
+		station.setCurrentPassenger(201);
+		station.updatePassengers();
+		assertTrue(station.getCurrentPassenger()==100);
+		station = new Station(null, 0, 0, 0, 0);
+		station.setCurrentPassenger(-1);
+		station.updatePassengers();
+		assertTrue(station.getCurrentPassenger()==0);
+		canton = line.getCanton(5);
+		station= canton.getStation();
+		station.setCurrentPassenger(20);
+		station.updatePassengers();
+		assertTrue(station.getCurrentPassenger()<=0);
+	}
+	
+	@Test
+	public void testUpdateSatisfaction(){
+		station = new Station(null, 0, 100, 0, 0);
+		station.setCurrentPassenger(51);
+		station.updateSatisfaction();
+		assertTrue(station.getSatisfaction()==75);
+		station.setCurrentPassenger(49);
+		station.setSatisfaction(75);
+		station.updateSatisfaction();
+		assertTrue(station.getSatisfaction()==76);
+		station = canton.getStation();
+		station.setCurrentPassenger(49);
+		station.setSatisfaction(75);
+		line.newIncident(canton, 0);
+		station.updateSatisfaction();
+		assertTrue(station.getSatisfaction()==74);
+	}
+	
+	@Test
+	public void testChangeSatisfaction(){
+		station = new Station(null, 0, 100, 3, 0);
+		station.incrementSatisfaction();
+		assertTrue(station.getSatisfaction()==76);
+		station.incrementSatisfaction();
+		assertTrue(station.getSatisfaction()==77);
+		station.decrementSatisfaction();
+		assertTrue(station.getSatisfaction()==76);
+		station.decrementSatisfaction();
+		assertTrue(station.getSatisfaction()==75);
+		station.useReserveTrain();
+		assertTrue(station.getNumReserveTrain()==2);
+		assertTrue(station.hasAvailableReserveTrain()==true);
+	}
 }

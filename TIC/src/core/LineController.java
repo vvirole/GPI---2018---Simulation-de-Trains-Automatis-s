@@ -20,6 +20,10 @@ import gui.GUIConstants;
  * frame.
  * 
  * @author Maxime
+ * @author Arnaud Sery
+ * @author Beno√Æt Cons
+ * @author Thomas Re
+ * @author Vincent Virole
  *
  */
 public class LineController extends Observable implements Runnable {
@@ -33,10 +37,14 @@ public class LineController extends Observable implements Runnable {
 	// Current cycle of the simulation
 	private Clock clock;
 	
+	// Number of accident
+	private int nbIncident;
+	
 	public LineController(int duration) {
 		this.duration = duration;
-		this.clock = Clock.newInstance();
+		this.clock = Clock.newInstance(this);
 		this.clock.start();
+		this.nbIncident = 0;
 	}
 	
 	public LineController(Observer observer){
@@ -52,79 +60,24 @@ public class LineController extends Observable implements Runnable {
 		runTrains();
 	
 		while(line.isWorking() && clock.getCounter() <= duration){
-			if (clock.getCounter() % Constants.ARRIVAL_TRAIN_UNIT == 0){
-				
-				
-				for (Canton canton : line.getCantonList()) {
-					if (canton.hasIncident() && Integer.parseInt(canton.getId()) != (line.getCantonList().size() - 1)) {
-						//System.out.println("dÈbut**************************************");
-						int idCanton = Integer.parseInt(canton.getId());
-						//System.out.println("id acc: " + idCanton);
-						
-						Canton nextCanton = canton;
-						try {
-							//System.out.println("nexCanton");
-							nextCanton = line.getCantonById(idCanton + 2);
-							//System.out.println("id nexCanton : " + Integer.parseInt(nextCanton.getId()));
-						} catch (TerminusException e) {
-							e.printStackTrace();
-						}
-						//System.out.println("is free : " + nextCanton.isFree() + " has incident : " + nextCanton.hasIncident());
-						if (nextCanton.isFree() && !nextCanton.hasIncident() && nextCanton.getStation().getNumReserveTrain() > 0 && ( canton.isFree() || canton.hasTrainBlocked())){
-							//System.out.println("new train reserve");
-							nextCanton.getStation().setNumReserveTrain(nextCanton.getStation().getNumReserveTrain() - 1);
-							Train newTrain = new Train(canton, 0, Constants.TRAIN_BASIC_SPEED, Train.RESERVE_TYPE);
-							line.addTrain(newTrain);
-							newTrain.setCurrentPosition(canton.getStation().getPosition());
-							try {
-								canton.getStation().enter(newTrain);
-							} catch (TerminusException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-							newTrain.start();
-						}
-						//System.out.println("fin**************************************");
-
-					}
-				}
-				
-				Canton startCanton = line.getCantons().get(0);
-				if (startCanton.isFree() && !startCanton.hasIncident()){
-					String currentPeriod = line.getPeriod();
-					Train newTrain = new Train(startCanton, 0, Constants.TRAIN_BASIC_SPEED, 
-								(currentPeriod.equals(Line.PERIOD_FULL) ? Train.LONG_TYPE : Train.SHORT_TYPE));
-					line.addTrain(newTrain);
-					newTrain.start();
-				}
-			}	
+			/**
+			 * New trains that enter on the line
+			 */
+			Canton startCanton = line.getCantons().get(0);
+			if (startCanton.isFree() && !startCanton.hasIncident()){
+				String currentPeriod = line.getPeriod();
+				Train newTrain = new Train(startCanton, 0, Constants.TRAIN_BASIC_SPEED, 
+							(currentPeriod.equals(Line.PERIOD_FULL) ? Train.LONG_TYPE : Train.SHORT_TYPE));
+				line.addTrain(newTrain);
+				newTrain.start();
+			}
 			
 			if (line.hasIncident()){
+				for (Canton canton : line.getCantonList()){
+					if (canton.hasIncident())
+						throwReserveTrain(canton);
+				}
 				line.resolveIncident();
-			}
-			
-			// Each minute
-			if (clock.getCounter() % 60 == 0){
-				
-				// Store data
-				storeData(clock.getElapsedMinute()); 
-				
-				// Update the period of journey
-				line.updatePeriod(clock.getHour());
-				
-				int i = RandomUtility.rand(0, line.getNbCanton() - 1);
-				Canton canton = line.getCanton(i);
-				if (!canton.hasIncident() && RandomUtility.rand(0, 20) < Constants.INCIDENT_RATIO){
-					line.newIncident(canton, Incident.INFRASTRUCTURE_INCIDENT);
-				}
-			}
-			
-			// Eeach 2 minutes
-			if (clock.getCounter() % 120 == 0){
-				for (Station station : line.getStationList()){
-					station.updatePassengers();
-					station.updateSatisfaction();
-				}
 			}
 			
 			// Notify the simulation panel that there is a change (repaint needed)
@@ -141,13 +94,71 @@ public class LineController extends Observable implements Runnable {
 		setChanged();
 		notifyObservers(); 
 		stopTrains(); // We stop the current trains on the line
+		
+		if (clock.getCounter() > duration) Clock.getInstance().close();
+	}
+	
+	public void update(){
+		// Storage of data
+		storeData();
+		
+		// Update the period of journey
+		line.updatePeriod(clock.getHour());
+		
+		for (Station station : line.getStationList()){
+			station.updatePassengers();
+		}
+		
+		// Probability to have a new incident
+		int i = RandomUtility.rand(0, line.getNbCanton() - 1);
+		Canton canton = line.getCanton(i);
+		if (!canton.hasIncident() && RandomUtility.rand(0, 20) < Constants.INCIDENT_RATIO){
+			if (RandomUtility.rand(0, 4) == 0){
+				line.newIncident(canton, Incident.PASSENGER_INCIDENT);
+				System.out.println("\nAn incident occured in the station " + canton.getStation().getName());
+			}
+			else {
+				line.newIncident(canton, Incident.INFRASTRUCTURE_INCIDENT);
+				System.out.println("\nAn incident occured in the canton " + canton.getId());
+			}
+			nbIncident++;
+		}
+	}
+	
+	/**
+	 * Update statisfaction data of station
+	 */
+	public void updateSatisfaction(){
+		for (Station station : line.getStationList()){
+			station.updateSatisfaction();
+		}
+	}
+
+	/**
+	 * Run a reserve train of a station of a accidented canton
+	 * @param accidentedCanton a canton that has an incident
+	 */
+	public void throwReserveTrain(Canton accidentedCanton) {
+			
+		if (!accidentedCanton.isLastCanton()) {
+			Canton nextCanton = line.getCanton(Integer.parseInt(accidentedCanton.getId()) + 1);
+			Station station = accidentedCanton.getStation();
+				
+			if (nextCanton.isFree() && !nextCanton.hasIncident() && accidentedCanton.isFree() && !accidentedCanton.hasTrainBlocked() 
+					&& station.hasAvailableReserveTrain() && station.isFree() && !station.hasIncident()){
+				Train reserveTrain = new Train(accidentedCanton, 0, Constants.TRAIN_BASIC_SPEED, Train.RESERVE_TYPE);
+				reserveTrain.setCurrentPosition(station.getPosition());			
+				line.addTrain(reserveTrain);
+				station.useReserveTrain();
+				reserveTrain.start();
+			}
+		}
 	}
 
 	/**
 	 * Store the data of the current cycle of the simulation
-	 * @minute the number of minute elapsed
 	 */
-	private void storeData(int minute) {
+	private void storeData() {
 		int satisfaction = 0;
 		int passenger = 0;
 		List<Station> stations = line.getStationList();
@@ -155,10 +166,9 @@ public class LineController extends Observable implements Runnable {
 			satisfaction += station.getSatisfaction();
 			passenger += station.getCurrentPassenger();
 		}
-		satisfaction = satisfaction / line.getNbCanton();
-		DataStorage.getInstance().addPassengerData(minute, passenger);
-		DataStorage.getInstance().addSatisfactionData(minute, satisfaction);
-		
+		satisfaction /= line.getNbCanton();
+		float time = Clock.getInstance().getElapsedMinute();
+		DataStorage.getInstance().addData(time, passenger, nbIncident, satisfaction);
 	}
 
 	/*********************************************************************/
@@ -192,6 +202,10 @@ public class LineController extends Observable implements Runnable {
 	
 	public void setDuration(int duration){
 		this.duration = duration;
+	}
+	
+	public Clock getClock(){
+		return clock;
 	}
 
 }

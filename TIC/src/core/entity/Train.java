@@ -6,6 +6,7 @@ import java.util.Map.Entry;
 
 import core.Constants;
 import core.TerminusException;
+import core.utility.Clock;
 import core.utility.RandomUtility;
 
 public class Train extends Thread {
@@ -91,7 +92,8 @@ public class Train extends Thread {
 						currentCanton.setTrainBlocked(true);
 						break;
 					}
-				}else {
+				}
+				else {
 					currentCanton.setTrainBlocked(false);
 				}
 				if (currentPosition + speed >= currentCanton.getEndPoint()) {
@@ -109,7 +111,7 @@ public class Train extends Thread {
 				}
 			}
 		}
-		System.out.println("-> " + getName() + " arrived at the terminus " + currentCanton.getStation().getName());
+		System.out.println("-> " + getName() + " arrived at the terminus " + currentCanton.getStation().getName() + " (" + Clock.getInstance() + ")");
 		currentCanton.exit();
 	}
 	
